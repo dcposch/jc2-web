@@ -74,7 +74,7 @@ More generally, $(x,y)\mapsto(x+h(y),y)$ works for every polynomial $h$, however
 A unit grid and its image under the shear $F(x,y)=(x+y^{2},y)$. Horizontal lines slide sideways by an amount fixed by their height; vertical lines bend into parabolas. Nothing is lost, because the second coordinate remembers the height. This is a real slice of a map defined over $\C^{2}$.
 :::
 
-In fact, the classical Jung–van der Kulk theorem says that every polynomial automorphism of $\mathbb C^2$—every polynomial map with a polynomial inverse—can be assembled from affine maps and transformations of this triangular kind. The theorem gives a remarkably complete description of the maps already known to be invertible. Applying it requires invertibility; the unresolved step is deriving that property from the Jacobian condition alone. [Lamy's geometric proof of the theorem](https://www.math.univ-toulouse.fr/~slamy/stock/jung_translation.pdf) explains this structure.
+In fact, the classical Jung–van der Kulk theorem says that every polynomial automorphism of $\mathbb C^2$, meaning every polynomial map with a polynomial inverse, can be assembled from affine maps and transformations of this triangular kind. The theorem gives a remarkably complete description of the maps already known to be invertible. Applying it requires invertibility; the unresolved step is deriving that property from the Jacobian condition alone. [Lamy's geometric proof of the theorem](https://www.math.univ-toulouse.fr/~slamy/stock/jung_translation.pdf) explains this structure.
 
 The condition in the conjecture is certainly necessary. Suppose $G$ is a polynomial inverse to $F$. The chain rule gives
 
@@ -119,7 +119,7 @@ $$
 The map wraps the plane around the punctured plane infinitely many times. Every small piece is reversible, yet distant inputs can have the same output. This example uses nonpolynomial functions and has nonconstant determinant. Its purpose is to show precisely what the inverse function theorem leaves undecided.
 
 :::figure{src="exponential-wrap" label="Figure 2" alt="On the left, the (s,t) plane cut into horizontal strips of height two pi, with two small patches marked one strip apart. On the right, the punctured plane ruled by circles and rays, with a single patch marked: the common image of both."}
-Each strip of height $2\pi$ covers the whole punctured plane. The two marked patches sit a full strip apart in the domain and share one image, so $E$ is reversible near every point and still far from injective. Locally invertible, globally many-to-one — and not polynomial.
+Each strip of height $2\pi$ covers the whole punctured plane. The two marked patches sit a full strip apart in the domain and share one image, so $E$ is reversible near every point and still far from injective. Locally invertible, globally many-to-one, and not polynomial.
 :::
 
 ## Properness, and why infinity enters
@@ -134,7 +134,7 @@ $$
 
 In words, inputs cannot escape arbitrarily far away while their outputs stay bounded.
 
-A proper local diffeomorphism $\mathbb C^2\to\mathbb C^2$ is a covering map onto the whole target. A covering map has a fixed collection of local inverse “sheets” over each sufficiently small target neighborhood. Because $\mathbb C^2$ is simply connected—every loop can be contracted to a point—a connected covering has only one sheet. Thus properness, together with the Jacobian condition, gives global invertibility. Classical algebraic results then give a polynomial inverse. The connection between properness and polynomial maps is developed in [Jelonek's work on non-properness](https://matwbn.icm.edu.pl/ksiazki/apm/apm58/apm5834.pdf).
+A proper local diffeomorphism $\mathbb C^2\to\mathbb C^2$ is a covering map onto the whole target. A covering map has a fixed collection of local inverse “sheets” over each sufficiently small target neighborhood. Because $\mathbb C^2$ is simply connected, meaning every loop can be contracted to a point, so a connected covering has only one sheet. Thus properness, together with the Jacobian condition, gives global invertibility. Classical algebraic results then give a polynomial inverse. The connection between properness and polynomial maps is developed in [Jelonek's work on non-properness](https://matwbn.icm.edu.pl/ksiazki/apm/apm58/apm5834.pdf).
 
 This is why infinity enters a problem whose hypothesis concerns derivatives at ordinary, finite points. A hypothetical counterexample must have a sequence
 
@@ -161,7 +161,7 @@ $$
 The input escapes while the output converges. For an output $(u,v)$ with $u\ne0$, the inverse is $(u,v/u)$, displaying exactly where the blow-up occurs. This map is not a Keller map: its Jacobian is $x$, which vanishes on a line. The open problem is whether such escape can occur for a complex polynomial map of the plane whose Jacobian never vanishes.
 
 :::figure{src="escape-to-infinity" label="Figure 3" alt="On the left, the hyperbola xy equals one climbing toward the vertical axis, with four marked points running off the top of the frame. On the right, their images marching leftward along the horizontal line v equals one toward an open circle at the point zero, one."}
-The input runs off to infinity along $xy=1$ while its image walks along the line $v=1$ toward the finite point $(0,1)$ — an *asymptotic value*. Polynomial formulas do permit this. Note the Jacobian of $H$ is $x$, which vanishes along a line, so $H$ is not a Keller map and the picture is not a counterexample.
+The input runs off to infinity along $xy=1$ while its image walks along the line $v=1$ toward the finite point $(0,1)$, an *asymptotic value*. Polynomial formulas do permit this. Note the Jacobian of $H$ is $x$, which vanishes along a line, so $H$ is not a Keller map and the picture is not a counterexample.
 :::
 
 Collect all asymptotic values into a set $A_F$, called the *non-properness set*. Before the campaign, substantial theorems already restricted it. For a Keller map of the complex plane, if this set is nonempty, it is an algebraic curve, possibly with several components; each component admits a polynomial parametrization $t\mapsto(a(t),b(t))$. Thus escape cannot accumulate on an arbitrary fractal or an arbitrary collection of isolated points. It has an algebraic shape. These facts, and additional restrictions from the Jacobian condition, appear in [Nguyen Van Chau's work](https://arxiv.org/abs/math/0305088).
@@ -176,7 +176,7 @@ $$
 
 Each equation defines a complex algebraic curve. Their intersection consists of the desired inputs. The Jacobian condition says that whenever they meet at a finite point, their tangent directions are independent: the intersection is transverse. On a real slice, picture two families of contour lines crossing cleanly. Clean crossings do not, by themselves, tell us how many crossings occur.
 
-For a generic output—one outside a suitable exceptional algebraic set—the number of inputs is a fixed positive integer $N$. This is the *geometric degree*, also called the sheet number or, in this setting, the topological degree. A polynomial automorphism has $N=1$.
+For a generic output, meaning one outside a suitable exceptional algebraic set, the number of inputs is a fixed positive integer $N$. This is the *geometric degree*, also called the sheet number or, in this setting, the topological degree. A polynomial automorphism has $N=1$.
 
 This degree is different from the degree of the formulas. The shear $(x+y^{100},y)$ has polynomial degree $100$ but geometric degree one. By contrast, $(x^2,y)$ has polynomial degree two and geometric degree two, though it fails the Jacobian condition on $x=0$. When reading about “degree bounds” in JC2, it is essential to know which degree is being counted.
 
@@ -185,7 +185,7 @@ Away from $A_F$, a Keller map gives an $N$-sheeted covering. Move a target point
 The square-root function supplies a small model: following the two solutions of $z^2=w$ once around $w=0$ exchanges them. For a hypothetical Keller counterexample, the obstacle around which one loops is the asymptotic curve. The map has no finite critical points; a failure to extend the covering across that curve must involve infinity.
 
 :::figure{src="monodromy" label="Figure 4" alt="On the left, the two square roots of w traced as w circles the origin once: each covers a half turn, ending where the other began. On the right, a schematic: a wavy curve labelled the non-properness set, a dashed loop encircling part of it, and four arcs above representing inverse sheets."}
-Left: carrying $w$ once around the origin exchanges the two solutions of $z^{2}=w$ — the smallest example of *monodromy*. Right: the corresponding picture for a hypothetical Keller counterexample. Because the map has no finite critical points, any failure to continue the sheets around the loop has to come from the behaviour at infinity, not from a branch point in the plane.
+Left: carrying $w$ once around the origin exchanges the two solutions of $z^{2}=w$. This is the smallest example of *monodromy*. Right: the corresponding picture for a hypothetical Keller counterexample. Because the map has no finite critical points, any failure to continue the sheets around the loop has to come from the behaviour at infinity, not from a branch point in the plane.
 :::
 
 There is a second useful way to examine the same geometry. Fix $u$ and restrict $Q$ to the curve
@@ -237,7 +237,7 @@ plot each exponent pair $(i,j)$ with $a_{ij}\ne0$, and take their convex hull. I
 The polygon is a diagram of exponents, not a picture of the curve itself. It extracts asymptotic information from the formula. Successive expansions refine that information into the branching and contact patterns used in the classical work of Moh and others. [Xu's study of root splitting](https://arxiv.org/abs/1604.07683) provides a later development of that approach.
 
 :::figure{src="newton-polygon" label="Figure 5" wide alt="On the left, the lattice points zero-two, one-zero and three-zero with their convex hull, the edge from zero-two to three-zero emphasised and labelled slope minus two thirds. On the right, a real slice of the curve y squared equals x cubed plus x, drawn against the dashed graph of y equals plus or minus x to the three halves."}
-The Newton polygon records exponents, not the curve. Balancing $y^{2}$ against $x^{3}$ along the emphasised edge gives $2r=3$, so $y$ grows like $x^{3/2}$ — and on the right, the curve and that leading approximation agree to leading order, separating only below it. The polygon extracts asymptotic behaviour from the formula alone.
+The Newton polygon records exponents, not the curve. Balancing $y^{2}$ against $x^{3}$ along the emphasised edge gives $2r=3$, so $y$ grows like $x^{3/2}$. On the right, the curve and that leading approximation agree to leading order, separating only below it. The polygon extracts asymptotic behaviour from the formula alone.
 :::
 
 ## What was already excluded

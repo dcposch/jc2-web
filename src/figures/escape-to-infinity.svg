@@ -24,5 +24,5 @@
 <path class="arrow" d="M292 158 L352 158"/>
 <path class="arrowhead" d="M352 158 l-6 -3.4 v6.8 Z"/>
 <text class="lbl-mark math" x="310" y="150">H</text>
-<text class="lbl-faint" x="56" y="286">not a Keller map — the Jacobian of H is x, which vanishes along a line</text>
+<text class="lbl-faint" x="56" y="286">not a Keller map: the Jacobian of H is x, which vanishes along a line</text>
 </svg>

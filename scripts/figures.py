@@ -243,7 +243,7 @@ def fig_escape():
     out.append('<path class="arrow" d="M292 158 L352 158"/>')
     out.append('<path class="arrowhead" d="M352 158 l-6 -3.4 v6.8 Z"/>')
     out.append('<text class="lbl-mark math" x="310" y="150">H</text>')
-    out.append(f'<text class="lbl-faint" x="56" y="{h - 14}">not a Keller map — the Jacobian of H is x, which vanishes along a line</text>')
+    out.append(f'<text class="lbl-faint" x="56" y="{h - 14}">not a Keller map: the Jacobian of H is x, which vanishes along a line</text>')
 
     write(
         "escape-to-infinity",

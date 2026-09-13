@@ -11,12 +11,12 @@ import { SITE, canonicalPath } from '../consts';
 interface Props {
   title: string;
   description?: string;
-  /** Set on entry pages so the tab reads "Title — jc2.fun". */
+  /** Set on entry pages so the tab reads "Title · jc2.fun". */
   bare?: boolean;
 }
 
 const { title, description = SITE.description, bare = false } = Astro.props;
-const pageTitle = bare ? title : `${title} — ${SITE.title}`;
+const pageTitle = bare ? title : `${title} · ${SITE.title}`;
 const canonical = new URL(canonicalPath(Astro.url.pathname), Astro.site);
 ---
 
