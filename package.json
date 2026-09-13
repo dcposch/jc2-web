@@ -4,11 +4,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "figures": "python3 scripts/figures.py && rm -f .astro/data-store.json",
+    "figures": "python3 scripts/figures.py && npm run clean:cache",
     "dev": "astro dev",
-    "build": "astro build && node scripts/check-house-style.mjs",
+    "build": "npm run clean:cache && astro build && node scripts/check-house-style.mjs",
     "preview": "astro preview",
-    "check": "node scripts/check-house-style.mjs"
+    "check": "node scripts/check-house-style.mjs",
+    "clean:cache": "rm -rf node_modules/.astro .astro/data-store.json"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.1",

@@ -75,9 +75,13 @@ npm run figures   # regenerate, then restart the dev server
 The generator warns when a label would be clipped or would collide with the
 neighbouring panel. The SVGs are committed so the deploy needs no Python.
 
-Two things to know: the dev server caches rendered Markdown keyed on the `.md`
-file, so a regenerated SVG would otherwise stay stale — `npm run figures` drops
-that cache, which means **the dev server must be restarted afterwards**.
+One thing to know. Figures are inlined into the Markdown at compile time, and
+Astro caches that result keyed on the `.md` file, so a regenerated SVG would
+otherwise stay stale. The cache lives in **`node_modules/.astro`**, which
+survives `rm -rf .astro` and which Vercel restores between deploys, so both
+`npm run figures` and `npm run build` clear it via `npm run clean:cache`.
+A running dev server rewrites that cache from its own copy, so restart it after
+regenerating figures.
 
 ### Adding an entry
 

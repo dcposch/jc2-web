@@ -155,7 +155,7 @@ def fig_wrap():
     right = Frame((-2.9, 2.9), (-2.9, 2.9), (372, 62, 210, 206))
 
     out.append('<text class="lbl-ink ttl" x="56" y="32">domain</text>')
-    out.append('<text x="56" y="48">(s, t), in strips of height 2π</text>')
+    out.append('<text x="56" y="48">(s, t), in strips of height 2 pi</text>')
     out.append('<text class="lbl-ink ttl" x="372" y="32">image</text>')
     out.append('<text x="372" y="48">the punctured plane</text>')
 
@@ -195,7 +195,7 @@ def fig_wrap():
     out.append('<path class="arrow" d="M292 168 L346 168"/>')
     out.append('<path class="arrowhead" d="M346 168 l-6 -3.4 v6.8 Z"/>')
     out.append('<text class="lbl-mark math" x="310" y="160">E</text>')
-    out.append(f'<text class="lbl-mark" x="56" y="{h - 12}">the two marked patches lie 2π apart and share one image</text>')
+    out.append(f'<text class="lbl-mark" x="56" y="{h - 12}">the two marked patches lie 2 pi apart and share one image</text>')
 
     write(
         "exponential-wrap",
@@ -360,6 +360,80 @@ def fig_newton():
     )
 
 
+# --------------------------------------------------------------------------
+# 6. Theorem A: which degree pairs (deg A, deg C) can solve AC' - vA'C = c.
+# --------------------------------------------------------------------------
+def fig_degree_lattice():
+    nu = 2
+    h = 340
+    out = []
+    fr = Frame((-0.7, 5.5), (-0.9, 10.7), (96, 62, 330, 246))
+    LX = 476  # the legend column
+
+    out.append('<text class="lbl-ink ttl" x="96" y="30">degree pairs</text>')
+    out.append(f'<text x="96" y="46">which (deg A, deg C) can solve the identity, shown for nu = {nu}</text>')
+
+    for i in range(6):
+        for j in range(11):
+            u, v = fr(i, j)
+            out.append(f'<circle class="lattice" cx="{u:.2f}" cy="{v:.2f}" r="1.5"/>')
+
+    out.append(f'<path class="axis" d="{fr.path([(-0.5, 0), (5.4, 0)])}"/>')
+    out.append(f'<path class="axis" d="{fr.path([(0, -0.6), (0, 10.5)])}"/>')
+    out.append(f'<text class="math lbl-ink" x="{fr(5.0, 0)[0]:.1f}" y="{fr(0, 0)[1] + 20:.1f}">deg A</text>')
+    out.append(f'<text class="math lbl-ink" x="{fr(0.12, 0)[0]:.1f}" y="{fr(0, 10.4)[1]:.1f}">deg C</text>')
+
+    # The cancellation line deg C = v deg A.
+    out.append(f'<path class="dashed" d="{fr.path([(0, 0), (5.3, nu * 5.3)])}"/>')
+
+    # The reduction walks straight down off that line.
+    a0, top, bot = 3, nu * 3, 1
+    out.append(f'<path class="arrow" d="{fr.path([(a0, top - 0.3), (a0, bot + 0.5)])}"/>')
+    au, av = fr(a0, bot + 0.5)
+    out.append(f'<path class="arrowhead" d="M{au:.2f} {av:.2f} l-3.4 -6 h6.8 Z"/>')
+    for j, cls, r in ((top, "dot", 3.6), (bot, "open", 4.2)):
+        u, v = fr(a0, j)
+        out.append(f'<circle class="{cls}" cx="{u:.2f}" cy="{v:.2f}" r="{r}"/>')
+
+    # deg A + deg C = 1, and the only two lattice points on it.
+    out.append(f'<path class="curve" d="{fr.path([(-0.45, 1.45), (1.45, -0.45)])}"/>')
+    for (i, j) in ((0, 1), (1, 0)):
+        u, v = fr(i, j)
+        out.append(f'<circle class="solution" cx="{u:.2f}" cy="{v:.2f}" r="5"/>')
+
+    # Legend, set clear of the drawing so nothing has to be crammed inside it.
+    rows = [
+        ("dashed", f"deg C = {nu} x deg A"),
+        (None, "the leading terms cancel here"),
+        ("arrow", f"subtract a multiple of A^{nu}"),
+        (None, "moves straight down, changes nothing"),
+        ("solution", "deg A + deg C = 1"),
+        (None, "the only pairs that survive"),
+    ]
+    y = 96
+    for mark, text in rows:
+        if mark == "dashed":
+            out.append(f'<path class="dashed" d="M{LX} {y - 4} h22"/>')
+        elif mark == "arrow":
+            out.append(f'<path class="arrow" d="M{LX + 11} {y - 13} v16"/>')
+            out.append(f'<path class="arrowhead" d="M{LX + 11} {y + 4} l-3.4 -6 h6.8 Z"/>')
+        elif mark == "solution":
+            out.append(f'<circle class="solution" cx="{LX + 11}" cy="{y - 4}" r="5"/>')
+        cls = "lbl-ink" if mark else "lbl-faint"
+        out.append(f'<text class="{cls}" x="{LX + 34}" y="{y}">{text}</text>')
+        y += 18 if mark is None else 16
+        if mark is None:
+            y += 12
+
+    out.append(f'<text class="lbl-faint" x="96" y="{h - 14}">off the dashed line the leading terms survive, so the degree must fall to zero</text>')
+
+    write(
+        "degree-lattice",
+        "Degree pairs (deg A, deg C) admissible for AC' - vA'C = c, with the reduction arrow.",
+        svg(WIDE, h, "\n".join(out), extra=' preserveAspectRatio="xMidYMid meet"'),
+    )
+
+
 if __name__ == "__main__":
     print("generating figures ->", OUT)
     fig_shear()
@@ -367,3 +441,4 @@ if __name__ == "__main__":
     fig_escape()
     fig_monodromy()
     fig_newton()
+    fig_degree_lattice()
