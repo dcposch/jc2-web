@@ -508,6 +508,72 @@ def fig_vertex_gap():
     )
 
 
+# --------------------------------------------------------------------------
+# 8. The cubic Kummer picture: three conjugate roots, and what their
+#    permutation leaves alone.
+# --------------------------------------------------------------------------
+def fig_cube_root():
+    h = 320
+    out = []
+    fr = Frame((-1.75, 1.75), (-1.75, 1.75), (118, 66, 200, 200))
+
+    out.append('<text class="lbl-ink ttl" x="96" y="32">three conjugate roots</text>')
+    out.append('<text x="96" y="48">the deck map turns each cube root into the next</text>')
+
+    circle = [(math.cos(a), math.sin(a)) for a in lin(0, 2 * math.pi)]
+    out.append(f'<path class="grid" d="{fr.path(circle, close=True)}"/>')
+    out.append(f'<path class="axis" d="{fr.path([(-1.5, 0), (1.5, 0)])}"/>')
+    out.append(f'<path class="axis" d="{fr.path([(0, -1.5), (0, 1.5)])}"/>')
+
+    roots = [math.pi / 2, math.pi / 2 + 2 * math.pi / 3, math.pi / 2 + 4 * math.pi / 3]
+    labels = ["t", "ωt", "ω²t"]
+    for a, lbl in zip(roots, labels):
+        u, v = fr(math.cos(a), math.sin(a))
+        out.append(f'<circle class="dot" cx="{u:.2f}" cy="{v:.2f}" r="4.5"/>')
+        lu, lv = fr(1.34 * math.cos(a), 1.34 * math.sin(a))
+        out.append(f'<text class="math lbl-ink" x="{lu - 6:.1f}" y="{lv + 4:.1f}">{lbl}</text>')
+
+    # Arcs carrying each root to the next.
+    for a in roots:
+        arc = [(1.0 * math.cos(th), 1.0 * math.sin(th))
+               for th in lin(a + 0.28, a + 2 * math.pi / 3 - 0.28, 30)]
+        out.append(f'<path class="deck" d="{fr.path(arc)}"/>')
+        eu, ev = fr(*arc[-1])
+        pu, pv = fr(*arc[-3])
+        dx, dy = eu - pu, ev - pv
+        n = math.hypot(dx, dy) or 1
+        dx, dy = dx / n * 6, dy / n * 6
+        out.append(f'<path class="arrowhead" d="M{eu:.2f} {ev:.2f} l{-dx - dy * 0.5:.2f} {-dy + dx * 0.5:.2f} l{dy:.2f} {-dx:.2f} Z"/>')
+    hu, hv = fr(-1.62, -1.5)
+    out.append(f'<text class="math lbl-faint" x="{hu:.1f}" y="{hv:.1f}">t³ = H</text>')
+
+    # The weight ledger: powers of t sorted by their eigenvalue under the map.
+    CX = [452, 588, 716]
+    out.append('<text class="lbl-ink ttl" x="452" y="32">what survives</text>')
+    out.append('<text x="452" y="48">powers of t, sorted by how the deck map scales them</text>')
+    heads = ["weight 0", "weight 1", "weight 2"]
+    rows = [["1", "t", "t²"], ["t³ = H", "t⁴", "t⁵"], ["t⁶ = H²", "t⁷", "t⁸"]]
+    out.append(f'<path class="edge" d="M{CX[0] - 12} 76 v104"/>')
+    for c, head in enumerate(heads):
+        out.append(f'<text class="{"lbl-ink" if c == 0 else "lbl-faint"} ttl" x="{CX[c]}" y="88">{head}</text>')
+    for r, row in enumerate(rows):
+        for c, cell in enumerate(row):
+            cls = "lbl-ink" if c == 0 else "lbl-faint"
+            out.append(f'<text class="math {cls}" x="{CX[c]}" y="{114 + r * 22}">{cell}</text>')
+    out.append(f'<text class="lbl-mark" x="{CX[0] - 12}" y="200">fixed by the map,</text>')
+    out.append(f'<text class="lbl-mark" x="{CX[0] - 12}" y="214">so already in k(x)</text>')
+    out.append(f'<text class="math lbl-faint" x="{CX[1]}" y="202">scaled by ω</text>')
+    out.append(f'<text class="math lbl-faint" x="{CX[2]}" y="202">scaled by ω²</text>')
+
+    out.append(f'<text class="lbl-faint" x="96" y="{h - 14}">an equation can only mention weight 0 if it is to descend to the base field</text>')
+
+    write(
+        "cube-root",
+        "The three cube roots of H, the deck action permuting them, and the weight grading it induces.",
+        svg(WIDE, h, "\n".join(out), extra=' preserveAspectRatio="xMidYMid meet"'),
+    )
+
+
 if __name__ == "__main__":
     print("generating figures ->", OUT)
     fig_shear()
@@ -517,3 +583,4 @@ if __name__ == "__main__":
     fig_newton()
     fig_degree_lattice()
     fig_vertex_gap()
+    fig_cube_root()

@@ -636,3 +636,6 @@ h3 {
 
 /* A construction line in a figure: present, but not part of the drawing. */
 :is(.figure, .statement__plate) svg .guide { stroke: var(--fg-muted); stroke-width: 1; stroke-dasharray: 2 3; opacity: 0.7; }
+
+/* The deck action in a Galois figure: a solid arc carrying one root to the next. */
+:is(.figure, .statement__plate) svg .deck { stroke: var(--mark); stroke-width: 1.4; opacity: 0.85; }
