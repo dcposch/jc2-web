@@ -1,0 +1,20 @@
+{
+  "name": "jc2-web",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "figures": "python3 scripts/figures.py && rm -f .astro/data-store.json",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/markdown-satteri": "^0.4.1",
+    "@astrojs/rss": "^4.0.19",
+    "@fontsource-variable/newsreader": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "astro": "^7.3.2",
+    "katex": "^0.18.7"
+  }
+}

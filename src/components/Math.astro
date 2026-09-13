@@ -1,0 +1,20 @@
+---
+import katex from 'katex';
+
+interface Props {
+  /** TeX source. */
+  tex: string;
+  /** Display (centred, own line) rather than inline. */
+  display?: boolean;
+}
+const { tex, display = false } = Astro.props;
+
+// Rendered here, at build time, so pages ship no math JavaScript.
+const html = katex.renderToString(tex, {
+  displayMode: display,
+  throwOnError: true,
+  strict: 'ignore',
+  macros: { '\\C': '\\mathbb{C}', '\\R': '\\mathbb{R}' },
+});
+---
+<Fragment set:html={html} />

@@ -1,0 +1,90 @@
+---
+// Optical-size axis: headings tighten, body opens. Drives font-optical-sizing.
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+import { SITE, canonicalPath } from '../consts';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Set on entry pages so the tab reads "Title — jc2.fun". */
+  bare?: boolean;
+}
+
+const { title, description = SITE.description, bare = false } = Astro.props;
+const pageTitle = bare ? title : `${title} — ${SITE.title}`;
+const canonical = new URL(canonicalPath(Astro.url.pathname), Astro.site);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@dcposch" />
+  </head>
+  <body>
+    <div class="shell">
+      <!-- The standing column rules: the sheet the page is drawn on. -->
+      <div class="gridline" aria-hidden="true"></div>
+
+      <header class="masthead">
+        <div class="masthead__inner">
+          <a class="wordmark" href="/">JC<sub>2</sub></a>
+          <span class="label masthead__tag">{SITE.tagline}</span>
+        </div>
+      </header>
+
+      <slot />
+
+      <footer class="colophon">
+        <div class="colophon__inner">
+          <nav aria-label="Site">
+            <a class="label" href={SITE.x} rel="me">x.com/dcposch</a>
+            <a class="label" href={SITE.github}>github</a>
+          </nav>
+        </div>
+      </footer>
+    </div>
+
+    <script is:inline>
+      // The only script on the site. A box that scrolls horizontally must be
+      // reachable by keyboard, or its content is unreachable without a mouse.
+      // Long equations and wide figures are the two that can overflow.
+      (function () {
+        function mark() {
+          document.querySelectorAll('.katex-display, .figure__frame, .statement__plate').forEach(function (el) {
+            if (el.scrollWidth > el.clientWidth + 1) {
+              el.tabIndex = 0;
+              if (el.classList.contains('katex-display')) {
+                el.setAttribute('role', 'region');
+                el.setAttribute('aria-label', 'Equation, scrolls horizontally');
+              }
+            } else {
+              el.removeAttribute('tabindex');
+              el.removeAttribute('role');
+              el.removeAttribute('aria-label');
+            }
+          });
+        }
+        mark();
+        addEventListener('resize', mark);
+        addEventListener('load', mark);
+      })();
+    </script>
+  </body>
+</html>

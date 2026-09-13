@@ -1,0 +1,631 @@
+/* ==========================================================================
+   jc2.fun — a drafting sheet, not a blog.
+
+   Structure, in one place, in this order:
+     1. TOKENS      every colour, size and rhythm value. The only literals.
+     2. BASE        element defaults built from tokens.
+     3. PRIMITIVES  small reusable pieces: .label, .rule, links, headings.
+     4. FRAME       page chrome: .shell grid, column rules, masthead, colophon.
+     5. PROSE       one block styling all Markdown output. Entries need no CSS.
+     6. MATH        KaTeX adjustments.
+     7. FIGURES     wrapper plus the generated-SVG palette.
+     8. BLOCKS      page composites: page head, statement, ledger, pager.
+
+   Rules of the road:
+     - Colour, type size, leading, tracking and spacing come from TOKENS. A
+       literal in any other section is a bug. Structural hairlines (1px) and
+       ratios tied to a specific font are the only exceptions, each commented.
+     - No per-page stylesheets. A new page composes existing primitives, or
+       adds one named block in section 8.
+   ========================================================================== */
+
+/* 1. TOKENS ============================================================== */
+
+:root {
+  /* Ink & paper. A neutral sheet — no warm cast — with one blue instrument
+     accent. Light is the primary design; dark mirrors the roles. */
+  --paper:        #f7f7f8;
+  --paper-raised: #fdfdfe;
+  --paper-sunk:   #eeeef1;
+  --ink:          #14151a;  /* 17.0:1 on --paper */
+  --ink-muted:    #4e525c;  /*  7.3:1 — captions, blurbs, state */
+  --ink-faint:    #6a6d75;  /*  4.8:1 — labels, dates, fine print */
+  --rule:         #e2e3e7;
+  --rule-strong:  #c7c9d1;
+  --gridline:     #ebecef;  /* the standing column rules */
+  --accent:       #1d4ed8;  /* 5.6:1 on --paper */
+  --accent-soft:  #c2d0f4;
+  --selection:    #d8e2fb;
+
+  /* Type families. Newsreader's transitional forms sit with KaTeX's Computer
+     Modern; IBM Plex Mono carries every label, date and section number. */
+  --font-prose: 'Newsreader Variable', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-mono:  'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Type scale, anchored on 1rem = 16px and climbing in powers of two and
+     their halves: 12 · 14 · 16 · 20 · 24 · 32. Nothing off this scale. */
+  --text-xs:   0.75rem;  /* 12px — labels, dates, section numbers */
+  --text-sm:   0.875rem; /* 14px — captions, blurbs */
+  --text-base: 1rem;     /* 16px — body prose */
+  --text-md:   1.25rem;  /* 20px — h3, entry titles */
+  --text-lg:   1.5rem;   /* 24px — lede, entry standfirst */
+  --text-xl:   2rem;     /* 32px — h1 on narrow screens */
+  --text-2xl:  3rem;     /* 48px — h1 */
+
+  --leading-head:  1.1;   /* h1 */
+  --leading-tight: 1.25;  /* titles, labels, register rows */
+  --leading-mid:   1.4;   /* captions, blurbs, fine print */
+  --leading-prose: 1.5;   /* body — 24px on a 16px base, on the 8px module */
+
+  --track-tight: -0.02em; /* h1 */
+  --track-snug:  -0.01em; /* titles */
+  --track-caps:   0.12em; /* uppercase mono */
+
+  /* Space scale, powers of two on an 8px module. */
+  --space-1: 0.25rem; /*  4px */
+  --space-2: 0.5rem;  /*  8px */
+  --space-3: 1rem;    /* 16px */
+  --space-4: 1.5rem;  /* 24px */
+  --space-5: 2rem;    /* 32px */
+  --space-6: 3rem;    /* 48px */
+
+  /* Measure & frame. */
+  --measure: 34rem;  /* 544px — the text column */
+  --bleed:   0rem;   /* how far a .wide element breaks out, each side */
+  --gutter:  var(--space-4);
+
+  --tick: 6px;       /* length of the marks capping each column rule */
+
+  --motion: 160ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  color-scheme: light;
+}
+
+/* The bleed opens only once there is room, so intermediate widths give their
+   space to the text rather than to empty side columns. */
+@media (min-width: 60rem) {
+  :root { --bleed: 8rem; }
+}
+
+@media (max-width: 40rem) {
+  :root { --gutter: var(--space-3); }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper:        #0e0f12;
+    --paper-raised: #16171b;
+    --paper-sunk:   #0a0b0d;
+    --ink:          #e6e7ea;
+    --ink-muted:    #a4a8b3;  /* 8.0:1 on --paper */
+    --ink-faint:    #868a95;  /* 5.6:1 */
+    --rule:         #24262c;
+    --rule-strong:  #383b44;
+    --gridline:     #1c1e23;
+    --accent:       #7ea6ff;
+    --accent-soft:  #2a3b6b;
+    --selection:    #23345e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --paper:        #0e0f12;
+  --paper-raised: #16171b;
+  --paper-sunk:   #0a0b0d;
+  --ink:          #e6e7ea;
+  --ink-muted:    #a4a8b3;  /* 8.0:1 on --paper */
+  --ink-faint:    #868a95;  /* 5.6:1 */
+  --rule:         #24262c;
+  --rule-strong:  #383b44;
+  --gridline:     #1c1e23;
+  --accent:       #7ea6ff;
+  --accent-soft:  #2a3b6b;
+  --selection:    #23345e;
+  color-scheme: dark;
+}
+
+/* 2. BASE =============================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-prose);
+  font-size: var(--text-base);
+  line-height: var(--leading-prose);
+  font-variant-numeric: oldstyle-nums;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--selection); color: var(--ink); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 3. PRIMITIVES ========================================================== */
+
+/* Links: ink with a blue underline, fully blue on hover. A real underline
+   rather than a bottom border, so a link that wraps is underlined on every
+   line instead of getting one rule beneath its whole box. */
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--accent-soft);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color var(--motion), text-decoration-color var(--motion);
+}
+a:hover, a:focus-visible { color: var(--accent); text-decoration-color: var(--accent); }
+
+h1, h2, h3, h4 { margin: 0; font-weight: 500; }
+
+/* JC with a subscript 2: the conjecture in two variables, set as it is written.
+   Positioned rather than using vertical-align, which lifts the line box. */
+sub {
+  font-size: 0.72em;
+  vertical-align: baseline;
+  position: relative;
+  top: 0.18em;
+  letter-spacing: 0;
+}
+h1 {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-head);
+  letter-spacing: var(--track-tight);
+  text-wrap: balance;
+}
+/* 48px is too much title for a phone. This has to sit after the h1 rule
+   above, not up with the tokens: same specificity, so order decides. */
+@media (max-width: 40rem) {
+  h1 { font-size: var(--text-xl); }
+  /* Step the deck down with it: 48/24/16 on a desktop, 32/20/16 on a phone. */
+  .lede, .standfirst { font-size: var(--text-md); }
+}
+h3 {
+  font-size: var(--text-md);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--track-snug);
+  text-wrap: balance;
+}
+
+/* The label: every date, count, section number and footer link on the site.
+   Small mono capitals are the drawing's annotation layer. */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--ink-faint);
+}
+
+.rule { border: 0; border-top: 1px solid var(--rule); margin: 0; }
+
+/* The one-sentence summary under a title. .lede leads a page in full ink;
+   .standfirst summarises an entry in muted ink. */
+.lede, .standfirst {
+  font-size: var(--text-lg);
+  line-height: var(--leading-mid);
+  margin: 0;
+  text-wrap: pretty;
+}
+.standfirst { color: var(--ink-muted); }
+
+/* 4. FRAME =============================================================== */
+
+/* One grid drives every page, and .prose repeats it inside itself so that a
+   figure buried in Markdown can still break out. Children sit in the text
+   column unless they ask for .wide (out by --bleed) or .full (edge to edge). */
+.shell, .prose {
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(var(--gutter), 1fr)
+    [wide-start] minmax(0, var(--bleed))
+    [text-start] minmax(0, var(--measure)) [text-end]
+    minmax(0, var(--bleed)) [wide-end]
+    minmax(var(--gutter), 1fr) [full-end];
+}
+/* .prose sits in the wide column and subdivides it, so it needs no gutters. */
+.prose { --gutter: 0rem; }
+
+.shell { position: relative; isolation: isolate; }
+.shell > *, .prose > * { grid-column: text; min-width: 0; }
+.shell > .wide, .prose > .wide { grid-column: wide; }
+.shell > .full, .prose > .full { grid-column: full; }
+.shell > .prose { grid-column: wide; }
+
+/* The standing column rules: the sheet the page is drawn on.
+
+   An absolutely positioned grid child takes its left/right from the grid area
+   named by grid-column, and its top/bottom from the grid container's padding
+   box — which is exactly what is wanted here: aligned to the text column,
+   full height of the page. (`grid-row: 1 / -1` does not work: with no
+   explicit rows, -1 resolves back to line 1.) */
+.gridline {
+  position: absolute;
+  grid-column: text;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-inline: 1px solid var(--gridline);
+}
+/* Tick marks capping each rule, as on a drawing. */
+.gridline::before, .gridline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: var(--tick);
+  border-top: 1px solid var(--rule-strong);
+}
+.gridline::before { left: calc(-1 * var(--tick) / 2 - 1px); }
+.gridline::after  { right: calc(-1 * var(--tick) / 2 - 1px); }
+
+/* Chrome spans the page but aligns its contents with the text column. */
+.masthead, .colophon { grid-column: full; }
+.masthead { border-bottom: 1px solid var(--rule); }
+.colophon { border-top: 1px solid var(--rule); margin-top: var(--space-6); }
+
+.masthead__inner, .colophon__inner {
+  max-width: calc(var(--measure) + 2 * var(--bleed));
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+.masthead__inner {
+  padding-block: var(--space-2);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.wordmark {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  /* Pads the hit area to ~34px without changing the bar's height. */
+  padding-block: var(--space-2);
+  margin-block: calc(-1 * var(--space-2));
+}
+.wordmark:hover { color: var(--accent); }
+
+.masthead__tag { color: var(--ink-faint); text-align: right; }
+@media (max-width: 46rem) { .masthead__tag { display: none; } }
+
+.colophon__inner {
+  padding-block: var(--space-2) var(--space-5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+}
+.colophon nav { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
+.colophon a {
+  color: var(--ink-muted);
+  text-decoration-color: transparent;
+  padding-block: var(--space-2);
+}
+.colophon a:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+/* 5. PROSE =============================================================== */
+
+/* Everything Markdown emits is styled here, once. Markdown output must be a
+   DIRECT child of .prose — do not wrap it in a div, or none of this applies.
+
+   Reset every child's margins first, then set the flow. Both selectors carry
+   the same specificity, so order decides — which keeps element-specific rules
+   from silently outranking the rhythm. */
+.prose { counter-reset: section; }
+.prose > * { margin-block: 0; }
+.prose > * + * { margin-top: var(--space-4); }
+
+/* A section head is an annotation, not a title: mono capitals over a rule,
+   numbered down the sheet. This is what keeps an entry reading as a document
+   rather than a blog post. */
+.prose > h2 {
+  counter-increment: section;
+  display: flex;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-top: var(--space-6);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--ink);
+}
+.prose > h2::before {
+  content: counter(section, decimal-leading-zero);
+  color: var(--accent);
+  flex: none;
+}
+.prose > h3 { margin-top: var(--space-5); }
+.prose > h2 + *, .prose > h3 + * { margin-top: var(--space-3); }
+
+.prose strong { font-weight: 600; }
+.prose ul, .prose ol { margin: var(--space-4) 0; padding-left: 1.25em; }
+.prose li + li { margin-top: var(--space-1); }
+.prose li::marker { color: var(--ink-faint); }
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--paper-sunk);
+  padding: 0.1em 0.32em;
+}
+
+.prose blockquote {
+  margin-block: var(--space-5);
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--rule-strong);
+  color: var(--ink-muted);
+}
+
+/* 6. MATH ================================================================ */
+
+/* A ratio, not a scale step: KaTeX's Computer Modern runs small beside
+   Newsreader, and this brings their x-heights into line. */
+.katex { font-size: 1.06em; }
+
+.katex-display {
+  margin-block: var(--space-4);
+  /* Long equations scroll in their own box; the page never scrolls sideways. */
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-strong) transparent;
+}
+/* Ease display maths down on phones so fewer equations need scrolling. The
+   ones that still do are focusable — see the shim in Base.astro. */
+@media (max-width: 40rem) {
+  .katex-display .katex { font-size: 0.95em; }
+}
+
+.katex-display[tabindex]:focus-visible,
+.figure__frame[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* 7. FIGURES ============================================================= */
+
+/* Palette handed to every generated SVG, wherever it is placed. */
+.figure, .statement {
+  --fg: var(--ink);
+  --fg-muted: var(--ink-faint);
+  --grid: var(--rule);
+  --mark: var(--accent);
+}
+.figure { margin-block: var(--space-5); }
+.figure__frame {
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  padding: var(--space-4);
+  overflow-x: auto;
+}
+/* A figure scales as one piece, so shrinking it to a phone's width would take
+   its 11px labels down to about 4px. Hold a legible floor and let the frame
+   scroll instead; the shim in Base.astro makes that reachable by keyboard. */
+.figure svg, .statement__plate svg {
+  display: block;
+  width: 100%;
+  min-width: 32rem;
+  height: auto;
+}
+
+.figure figcaption {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  line-height: var(--leading-mid);
+  color: var(--ink-muted);
+}
+/* The caption arrives as a Markdown paragraph; keep the label inline with it. */
+.figure figcaption > p { margin: 0; }
+.figure figcaption > p:first-child { display: inline; }
+.figure figcaption b {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-right: var(--space-2);
+}
+
+/* Generated-SVG palette — see scripts/figures.py for the class vocabulary.
+   Sizes here are viewBox units, not page type: they scale with the drawing,
+   so they sit deliberately outside the rem scale above. */
+.figure svg, .statement__plate svg text { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; fill: var(--fg-muted); }
+.figure svg, .statement__plate svg .ttl  { font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; }
+.figure svg, .statement__plate svg .math { font-family: var(--font-prose); font-style: italic; font-size: 14px; letter-spacing: 0; }
+.figure svg, .statement__plate svg .lbl-ink   { fill: var(--fg); }
+.figure svg, .statement__plate svg .lbl-mark  { fill: var(--mark); }
+.figure svg, .statement__plate svg .lbl-faint { fill: var(--fg-muted); }
+
+.figure svg, .statement__plate svg path, .figure svg circle { fill: none; vector-effect: non-scaling-stroke; }
+.figure svg, .statement__plate svg .grid        { stroke: var(--grid); stroke-width: 1; }
+.figure svg, .statement__plate svg .axis        { stroke: var(--fg-muted); stroke-width: 1; opacity: 0.55; }
+.figure svg, .statement__plate svg .curve       { stroke: var(--fg); stroke-width: 1.75; stroke-linecap: round; }
+.figure svg, .statement__plate svg .curve-alt   { stroke: var(--fg); stroke-width: 1.75; stroke-linecap: round; stroke-dasharray: 5 3.5; }
+.figure svg, .statement__plate svg .curve-heavy { stroke: var(--fg); stroke-width: 2; stroke-linecap: round; }
+.figure svg, .statement__plate svg .dashed      { stroke: var(--mark); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.figure svg, .statement__plate svg .dot         { fill: var(--mark); stroke: none; }
+.figure svg, .statement__plate svg .open        { stroke: var(--mark); stroke-width: 1.75; fill: var(--paper-raised); }
+.figure svg, .statement__plate svg .puncture    { stroke: var(--fg-muted); stroke-width: 1.4; fill: var(--paper-raised); stroke-dasharray: 2.5 2.5; }
+.figure svg, .statement__plate svg .arrow       { stroke: var(--mark); stroke-width: 1.3; }
+.figure svg, .statement__plate svg .arrowhead   { fill: var(--mark); stroke: none; }
+.figure svg, .statement__plate svg .strip-a     { fill: var(--mark); opacity: 0.12; stroke: none; }
+.figure svg, .statement__plate svg .strip-b     { fill: var(--fg-muted); opacity: 0.08; stroke: none; }
+.figure svg, .statement__plate svg .patch       { fill: var(--mark); opacity: 0.7; stroke: none; }
+.figure svg, .statement__plate svg .hull        { stroke: var(--fg-muted); stroke-width: 1.2; fill: var(--fg-muted); fill-opacity: 0.07; stroke-dasharray: 3 3; }
+.figure svg, .statement__plate svg .edge        { stroke: var(--mark); stroke-width: 2.2; }
+.figure svg, .statement__plate svg .lattice     { fill: var(--grid); stroke: none; }
+.figure svg, .statement__plate svg .loop        { stroke: var(--mark); stroke-width: 1.6; stroke-dasharray: 4 3; }
+.figure svg, .statement__plate svg .sheet       { stroke: var(--fg); stroke-width: 1.3; opacity: 0.6; stroke-linecap: round; }
+
+/* 8. BLOCKS ============================================================== */
+
+/* Page head: the title block opening the home page and every entry. */
+.page-head        { padding-top: var(--space-5); }
+.page-head h1     { margin-bottom: var(--space-3); }
+.page-head__meta  { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin-bottom: var(--space-4); }
+.page-head__rule  { margin-block: var(--space-5); }
+
+/* The problem, set as the page's one monument: the drawing, the map that made
+   it, and one sentence saying what the conjecture claims. */
+.statement {
+  margin-block: var(--space-5);
+  padding: var(--space-4);
+  border-block: 1px solid var(--rule-strong);
+  background: var(--paper-raised);
+}
+.statement .katex-display { margin: 0; }
+.statement__plate { margin-bottom: var(--space-4); overflow-x: auto; }
+.statement__plate svg { display: block; width: 100%; height: auto; }
+.statement__gloss {
+  margin: var(--space-3) 0 0;
+  text-align: center;
+  font-size: var(--text-sm);
+  line-height: var(--leading-mid);
+  color: var(--ink-muted);
+  text-wrap: balance;
+}
+
+/* Register: the campaign's status board. One row per avenue, its state, and
+   the remaining gap in fine print. Dense on purpose — this is the part of the
+   page a contributor scans looking for somewhere to work. */
+.register { margin-top: var(--space-3); }
+.register ol { list-style: none; margin: 0; padding: 0; }
+
+.register__row {
+  display: grid;
+  grid-template-columns: 1.75rem 1fr auto;
+  gap: 0 var(--space-3);
+  align-items: baseline;
+  padding-block: var(--space-2);
+  border-bottom: 1px solid var(--rule);
+}
+.register__row:first-child { border-top: 1px solid var(--ink); }
+/* Faint, not accent: the blue belongs to section numbers and links, and two
+   accented numbering systems this close together read as one confused list. */
+.register__n     { color: var(--ink-faint); }
+.register__name  { line-height: var(--leading-tight); text-wrap: balance; }
+.register__name a { display: inline-block; padding-block: var(--space-1); }
+.register__state { white-space: nowrap; color: var(--ink-muted); }
+
+/* Status lamp: solid for proved, accent for partial, hollow for open. */
+.register__state::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: var(--space-2);
+  vertical-align: 0.08em;
+  background: var(--ink);
+}
+.register__row[data-level='partial'] .register__state::before { background: var(--accent); }
+.register__row[data-level='open'] .register__state::before {
+  background: none;
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.register__gap {
+  grid-column: 2 / -1;
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-mid);
+  color: var(--ink-faint);
+  text-wrap: pretty;
+}
+@media (max-width: 40rem) {
+  .register__row { grid-template-columns: 1.75rem 1fr; }
+  .register__state, .register__gap { grid-column: 2; }
+  .register__state { margin-top: var(--space-1); }
+}
+
+/* Ledger ---------------------------------------------------------------- */
+/* The entry list is the page's spine, so its heading is an ordinary numbered
+   section head like the others — the count rides along on the right. */
+.ledger {
+  --date-col: 6rem;  /* the stamped date column */
+}
+.ledger__count { margin-left: auto; }
+
+.ledger ol { list-style: none; margin: 0; padding: 0; }
+
+/* A row is a ruled line of the register: stamped date, then the entry. The
+   title and blurb share one cell — two grid children would wrap the blurb
+   back under the date. */
+.entry-row:first-child { border-top: 1px solid var(--ink); }
+.entry-row {
+  display: grid;
+  grid-template-columns: var(--date-col) 1fr;
+  gap: var(--space-4);
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--rule);
+}
+@media (max-width: 40rem) {
+  .entry-row { grid-template-columns: 1fr; gap: var(--space-2); }
+}
+.entry-row__date { padding-top: 0.3em; }
+.entry-row__title {
+  display: block;
+  text-decoration: none;
+  font-size: var(--text-md);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--track-snug);
+  text-wrap: balance;
+}
+.entry-row:hover .entry-row__title { color: var(--accent); }
+.entry-row:hover .entry-row__date { color: var(--accent); }
+.entry-row__blurb {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-mid);
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+/* A closing line under a list. Both the register and the ledger end with one:
+   neither list is finished, and the page should say so. */
+.terminus {
+  padding-top: var(--space-3);
+  font-size: var(--text-sm);
+  line-height: var(--leading-mid);
+  color: var(--ink-faint);
+  text-wrap: pretty;
+}
+.ledger .terminus { padding-left: calc(var(--date-col) + var(--space-4)); }
+@media (max-width: 40rem) { .ledger .terminus { padding-left: 0; } }
+
+/* Entry ----------------------------------------------------------------- */
+.entry > p:first-of-type::first-line { font-variant-caps: small-caps; letter-spacing: 0.025em; }
+.entry-foot { margin-top: var(--space-6); padding-top: var(--space-3); border-top: 1px solid var(--ink); }
+
+/* Pager ----------------------------------------------------------------- */
+.pager { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--space-4); justify-content: space-between; }
+.pager li { margin: 0; max-width: 20rem; }
+.pager__next { text-align: right; margin-left: auto; }
+.pager a { display: block; text-decoration: none; }
+.pager .label { display: block; margin-bottom: var(--space-1); }
+.pager__title { display: block; font-size: var(--text-base); line-height: var(--leading-tight); text-wrap: balance; }
+.pager a:hover .pager__title { color: var(--accent); }

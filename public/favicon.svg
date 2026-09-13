@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="4" fill="#1b1815"/>
+  <!-- Determinant bars around a 2x2 array of dots: the Jacobian condition. -->
+  <g stroke="#b4351a" stroke-width="2" stroke-linecap="round">
+    <path d="M8 7v18M24 7v18"/>
+  </g>
+  <g fill="#fbf8f2">
+    <circle cx="13.5" cy="12" r="1.9"/><circle cx="18.5" cy="12" r="1.9"/>
+    <circle cx="13.5" cy="20" r="1.9"/><circle cx="18.5" cy="20" r="1.9"/>
+  </g>
+</svg>
