@@ -434,6 +434,80 @@ def fig_degree_lattice():
     )
 
 
+# --------------------------------------------------------------------------
+# 7. Vertex gap: narrow supports, and a Minkowski vertex with one decomposition.
+# --------------------------------------------------------------------------
+def fig_vertex_gap():
+    h = 330
+    out = []
+    lo, hi = -0.55, 4.6
+    left = Frame((lo, hi), (lo, hi), (96, 66, 240, 220))
+    right = Frame((lo, hi), (lo, hi), (516, 66, 240, 220))
+
+    def lattice(fr):
+        g = []
+        for i in range(5):
+            for j in range(5):
+                u, v = fr(i, j)
+                g.append(f'<circle class="lattice" cx="{u:.2f}" cy="{v:.2f}" r="2"/>')
+        g.append(f'<path class="axis" d="{fr.path([(lo, 0), (hi, 0)])}"/>')
+        g.append(f'<path class="axis" d="{fr.path([(0, lo), (0, hi)])}"/>')
+        return g
+
+    # Panel 1: the two strips, both narrow in the direction w = 2i - j.
+    out.append('<text class="lbl-ink ttl" x="96" y="32">narrow supports</text>')
+    out.append('<text x="96" y="48">every exponent sits in a thin band of w = 2i - j</text>')
+    # Q occupies 0 <= w <= 3, P the narrower 0 <= w <= 2.
+    out.append(f'<path class="strip-b" d="{left.path([(-0.25, lo), (2.3, hi), (3.8, hi), (1.3, lo)], close=True)}"/>')
+    out.append(f'<path class="strip-a" d="{left.path([(-0.25, lo), (2.3, hi), (3.3, hi), (0.8, lo)], close=True)}"/>')
+    out += lattice(left)
+    out.append(f'<path class="guide" d="{left.path([(-0.25, lo), (2.3, hi)])}"/>')
+    for (i, j), lbl, cls in (((1, 0), "a1", "dot"), ((2, 1), "b3", "dot")):
+        u, v = left(i, j)
+        out.append(f'<circle class="{cls}" cx="{u:.2f}" cy="{v:.2f}" r="4"/>')
+        out.append(f'<text class="lbl-mark" x="{u + 7:.1f}" y="{v - 7:.1f}">{lbl}</text>')
+    out.append(f'<text class="lbl-faint" x="{left(0.15, 4.4)[0]:.1f}" y="{left(0, 4.4)[1]:.1f}">w = 0</text>')
+    pu, pv = left(2.05, 3.5)
+    out.append(f'<text class="lbl-faint" x="{pu:.1f}" y="{pv:.1f}">P: 0 to 2</text>')
+    qu, qv = left(3.0, 3.0)
+    out.append(f'<text class="lbl-faint" x="{qu:.1f}" y="{qv:.1f}">Q: 0 to 3</text>')
+    out.append(f'<text class="math lbl-ink" x="{left(4.3, 0)[0]:.1f}" y="{left(0, 0)[1] + 20:.1f}">i</text>')
+    out.append(f'<text class="math lbl-ink" x="{left(0, 0)[0] - 16:.1f}" y="{left(0, 4.4)[1]:.1f}">j</text>')
+
+    # Panel 2: the Minkowski point that carries x-squared is a vertex.
+    out.append('<text class="lbl-ink ttl" x="516" y="32">one decomposition</text>')
+    out.append('<text x="516" y="48">the corner (3,1) splits in only one way</text>')
+    out += lattice(right)
+    out.append(f'<path class="arrow" d="{right.path([(0, 0), (0.92, 0)])}"/>')
+    au, av = right(0.92, 0)
+    out.append(f'<path class="arrowhead" d="M{au:.2f} {av:.2f} l-6 -3.4 v6.8 Z"/>')
+    out.append(f'<path class="arrow" d="{right.path([(1.06, 0.03), (2.92, 0.96)])}"/>')
+    bu, bv = right(2.92, 0.96)
+    out.append(f'<path class="arrowhead" d="M{bu:.2f} {bv:.2f} l-6.4 -1.2 l2.6 5.4 Z"/>')
+    for (i, j), lbl in (((1, 0), "p0 = (1,0)"), ((2, 1), "")):
+        if not lbl:
+            continue
+        u, v = right(i, j)
+        out.append(f'<text class="lbl-mark" x="{u - 14:.1f}" y="{v + 20:.1f}">{lbl}</text>')
+    mu, mv = right(1.9, 0.35)
+    out.append(f'<text class="lbl-mark" x="{mu:.1f}" y="{mv:.1f}">q0 = (2,1)</text>')
+    vu, vv = right(3, 1)
+    out.append(f'<circle class="solution" cx="{vu:.2f}" cy="{vv:.2f}" r="6"/>')
+    out.append(f'<text class="lbl-ink" x="{vu + 10:.1f}" y="{vv - 8:.1f}">(3,1)</text>')
+    out.append(f'<text class="lbl-faint" x="{vu + 10:.1f}" y="{vv + 5:.1f}">carries x squared</text>')
+    eu, ev = right(0.25, 2.5)
+    out.append(f'<text class="lbl-ink" x="{eu:.1f}" y="{ev:.1f}">one term, so</text>')
+    out.append(f'<text class="lbl-mark" x="{eu:.1f}" y="{ev + 15:.1f}">a1 · b3 = 1</text>')
+
+    out.append(f'<text class="lbl-faint" x="96" y="{h - 14}">a corner has only one decomposition, so the sum collapses to a single product</text>')
+
+    write(
+        "vertex-gap",
+        "Narrow exponent strips, and the unique decomposition of the Minkowski vertex (3,1).",
+        svg(WIDE, h, "\n".join(out), extra=' preserveAspectRatio="xMidYMid meet"'),
+    )
+
+
 if __name__ == "__main__":
     print("generating figures ->", OUT)
     fig_shear()
@@ -442,3 +516,4 @@ if __name__ == "__main__":
     fig_monodromy()
     fig_newton()
     fig_degree_lattice()
+    fig_vertex_gap()
