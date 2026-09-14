@@ -2,6 +2,9 @@
 title: "Why adjoining a cube root can simplify a problem"
 date: 2026-08-26
 description: "At partial degrees six and nine the leading coefficients are a square and a cube of the same polynomial, and one cube root makes both of them one. The symmetry that comes with it grades every remaining equation."
+sources:
+  - label: "Lean 4 proof"
+    href: "https://github.com/dcposch/jc2-lean/tree/master/gcd3-69-noncube"
 ---
 
 Enlarging the field you work over looks like the wrong direction. You wanted to solve a problem over $k(x)$, and now you have a bigger object with more elements in it. But an extension comes with a symmetry group, and a symmetry group sorts things. Sometimes the sorting is worth more than the simplicity you gave up.
@@ -52,13 +55,13 @@ From there the argument depresses both polynomials simultaneously, integrates th
 
 **Noncube exclusion at partial degrees $(6,9)$.** Let $p, q \in k[x][y]$ have outer degrees six and nine, leading coefficients $H^{2}$ and $H^{3}$, and nonzero constant Keller bracket. If $3 \mid \deg H$, then $H$ cannot be a noncube.
 
-It is [formalized in Lean 4](https://github.com/dcposch/jc2-lean/tree/main/gcd3-69-noncube). The statement is worth reading carefully for what it does **not** contain: no preselected cubic extension, no affine normalization, no coefficient weights, no constant-field hypothesis, and no rational numerator and denominator presentation. All of that is constructed inside the proof from the literal polynomial hypotheses. That matters, because a statement that assumed the extension would be assuming the convenient half of the setup.
+It is [formalized in Lean 4](https://github.com/dcposch/jc2-lean/tree/master/gcd3-69-noncube). The statement is worth reading carefully for what it does **not** contain: no preselected cubic extension, no affine normalization, no coefficient weights, no constant-field hypothesis, and no rational numerator and denominator presentation. All of that is constructed inside the proof from the literal polynomial hypotheses. That matters, because a statement that assumed the extension would be assuming the convenient half of the setup.
 
 Three sheets have to be excluded to finish: a zero sheet, an elliptic sheet, and a shifted Davenport–Stothers sheet. They are excluded separately, and the third is the one that needs real work.
 
 ## Scope
 
-This is the noncube branch and nothing else. It does not prove the cube branch, where $H$ **is** a cube and the extension above is trivial, so the entire grading argument is unavailable and a different mechanism is needed. It does not cover all of $(6,9)$. It does not reach maximum partial degree eleven. It does not prove the plane Jacobian conjecture.
+This is the noncube branch and nothing else. It does not prove the cube branch, where $H$ **is** a cube and the extension above is trivial, so the entire grading argument is unavailable and a different mechanism is needed. It does not cover all of $(6,9)$. It does not reach maximum partial degree eleven. It does not prove the Plane Jacobian Conjecture.
 
 Saying which half is done is the point. The noncube case is the one where the symmetry exists, which is exactly why it fell first. The cube case is harder for a reason that the proof above makes clear rather than hides: there is no deck action to grade by.
 

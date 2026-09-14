@@ -2,6 +2,13 @@
 title: "Descending to a problem the campaign already knows how to solve"
 date: 2026-09-05
 description: "Moh's Appendix II sends a pair of degrees (n, m) to a smaller pair with a monomial Jacobian. The descended problems land where the campaign already holds certificates, an unbounded ray of them is now a theorem through its eighth member, and a printed step in Moh's own proof turned out to be wrong."
+sources:
+  - label: "Lane report"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/m2-descent-opus5-20260903.md"
+  - label: "Hostile review (AUDIT 17(t))"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/descent-radii-grok46-20260903.md"
+  - label: "Theorem (T) at t = 8, gate (AUDIT 17(qqqqqqqqq))"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/k16-t8-gate-astra-20260905.md"
 ---
 
 The second half of Moh's 1983 paper is easy to skip. The first half sets up the census; the second, in an appendix, kills the surviving rows one at a time by a change of variables. It took the campaign until September to read that appendix at the level of individual displayed formulas, and it turned out to contain the most reusable idea in the paper.

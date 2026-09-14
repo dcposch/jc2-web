@@ -21,9 +21,21 @@ const { Content } = await render(entry);
     <header class="page-head">
       <div class="page-head__meta">
         <time class="label" datetime={isoDate(entry.data.date)}>{isoDate(entry.data.date)}</time>
+        <span class="label page-head__author">{entry.data.author}</span>
       </div>
       <h1>{entry.data.title}</h1>
       <p class="standfirst">{entry.data.description}</p>
+      {entry.data.sources.length > 0 && (
+        <p class="page-head__sources">
+          <span class="label">Argument</span>{' '}
+          {entry.data.sources.map((source, i) => (
+            <>
+              {i > 0 && ' · '}
+              <a href={source.href}>{source.label}</a>
+            </>
+          ))}
+        </p>
+      )}
       <hr class="rule page-head__rule" />
     </header>
 

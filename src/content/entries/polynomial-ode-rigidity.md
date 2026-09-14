@@ -2,6 +2,9 @@
 title: "When a polynomial differential equation forces a straight line"
 date: 2026-08-19
 description: "One short identity says that a polynomial whose derivative is balanced against a second polynomial in a particular way can only be linear, and that rigidity is what closes a block in the strip reduction."
+sources:
+  - label: "Lean 4 proof"
+    href: "https://github.com/dcposch/jc2-lean/tree/master/theorem-a"
 ---
 
 Take two polynomials in one variable, $A$ and $C$, and form the combination
@@ -64,7 +67,7 @@ $$
 
 Then $\deg A \le 1$.
 
-This is [formalized in Lean 4 and kernel-checked](https://github.com/dcposch/jc2-lean/tree/main/theorem-a), and registered as [PALOMAR-2026-08-19-000005](https://palomar-registry.org/entry?id=PALOMAR-2026-08-19-000005&version=1).
+This is [formalized in Lean 4 and kernel-checked](https://github.com/dcposch/jc2-lean/tree/master/theorem-a), and registered as [PALOMAR-2026-08-19-000005](https://palomar-registry.org/entry?id=PALOMAR-2026-08-19-000005&version=1).
 
 ## Where the characteristic matters
 

@@ -2,6 +2,11 @@
 title: "A trace identity that was true and did not help"
 date: 2026-09-04
 description: "The traces of powers of one polynomial over the fibres of the other satisfy an exact differential identity whose degree grows with the exponent while the geometric degree stays pinned. It looked like a ceiling. It is a shape constraint that the frontier never violates."
+sources:
+  - label: "Lane report (AUDIT 17(o))"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/ps-growth-opus5-20260903.md"
+  - label: "Hostile review (AUDIT 17(s))"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/next-coeff-psreview-grok46-20260903.md"
 ---
 
 After the census theorem, the campaign needed a quantity that grows with the degree of a hypothetical counterexample while its geometric degree stays fixed. Here is the first candidate, why it looked promising, and the exact sense in which it does not do the job.

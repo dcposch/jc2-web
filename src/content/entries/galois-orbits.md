@@ -2,6 +2,15 @@
 title: "Which discs are conjugate, and how many configurations are really left"
 date: 2026-09-06
 description: "An assumption about which branches at infinity are Galois conjugates ran through two integration cycles and was not a theorem. Replacing it with the actual orbit law cut the necessary configurations at n up to 200 from twenty-four thousand to ninety, and at n up to 100 it reproduces Moh's 1983 list exactly."
+sources:
+  - label: "Lane report"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/branch-orbits-v2-grok46-20260903.md"
+  - label: "Hostile review (AUDIT 17(j))"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/branch-orbits-v2-review-gpt55-20260903.md"
+  - label: "Stabilizer theorem"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/actual-stabilizer-soundness-opus5-20260906.md"
+  - label: "Gate (AUDIT 17(ggggggggggg))"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/actual-stabilizer-screen-gate-astra-20260906.md"
 ---
 
 The cube-root entry used a symmetry to sort equations by weight. This entry is about the same idea at infinity, where the symmetry is the Galois action on Puiseux branches, and about what happens when you assume more symmetry than you have.

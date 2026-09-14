@@ -2,6 +2,9 @@
 title: "How a gap in a Newton polygon forces coefficients to vanish"
 date: 2026-08-20
 description: "The Jacobian bracket reads off one equation per lattice point, and at a corner that equation has a single term. Following the consequences empties a whole chart of the strip family."
+sources:
+  - label: "Lean 4 proof"
+    href: "https://github.com/dcposch/jc2-lean/tree/master/vertex-gap"
 ---
 
 A Keller map has to satisfy one equation, $P_xQ_y - P_yQ_x = 1$. That looks like a single condition, but a polynomial identity is really a long list of conditions, one for each monomial. The useful question is which of those conditions are short. Short equations are the ones that force things to be zero, and where they sit is decided by the shape of the exponents rather than by the coefficients.
@@ -74,7 +77,7 @@ Then $a_3 = a_{(1,2)} = 0$ and $a_2^2 a_6 = a_{(1,1)}^2 a_{(2,4)} = 0$.
 
 The consequence is the useful part. The generic chart of the strip family is the one where $a_2a_6 \neq 0$, and the conclusion says that chart is empty. A family that looked like it had room turns out to have none.
 
-This is [formalized in Lean 4](https://github.com/dcposch/jc2-lean/tree/main/vertex-gap) and registered as [PALOMAR-2026-08-20-000001](https://palomar-registry.org/entry?id=PALOMAR-2026-08-20-000001&version=1). The vertex equation and the gap kill are derived from the bracket inside the formalization rather than assumed, which is the part worth checking, since assuming them would beg the question.
+This is [formalized in Lean 4](https://github.com/dcposch/jc2-lean/tree/master/vertex-gap) and registered as [PALOMAR-2026-08-20-000001](https://palomar-registry.org/entry?id=PALOMAR-2026-08-20-000001&version=1). The vertex equation and the gap kill are derived from the bracket inside the formalization rather than assumed, which is the part worth checking, since assuming them would beg the question.
 
 ## Scope
 

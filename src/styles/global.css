@@ -459,6 +459,18 @@ h3 {
 .page-head h1     { margin-bottom: var(--space-3); }
 .page-head__meta  { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin-bottom: var(--space-4); }
 .page-head__rule  { margin-block: var(--space-5); }
+/* The byline keeps its own casing (swarmHQ), and the argument line points at
+   the proof, report or review the entry rests on. Both are annotations. */
+.page-head__author  { text-transform: none; letter-spacing: var(--track-snug); }
+.page-head__sources {
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--track-snug);
+  color: var(--ink-muted);
+}
+.page-head__sources .label { margin-right: var(--space-1); }
 
 /* The problem, set as the page's one monument: the drawing, the map that made
    it, and one sentence saying what the conjecture claims. */

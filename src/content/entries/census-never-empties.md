@@ -2,6 +2,13 @@
 title: "The census never empties"
 date: 2026-09-03
 description: "Three explicit unbounded families pass every one of Moh's printed conditions, so no degree bound can come from the numerical skeleton alone. Any uniform proof has to use a datum the skeleton does not carry."
+sources:
+  - label: "Lane report (AUDIT 17(n))"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/fixed-n6-family-moment-defect-sol56-20260903.md"
+  - label: "Hostile review"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/n6-family-review-grok46-20260903.md"
+  - label: "K = 16 ray gate (AUDIT 17(w))"
+    href: "https://github.com/dcposch/jc2/blob/master/xmodel/k16-ray-gate-gpt55-20260903.md"
 ---
 
 For two weeks the campaign's centre of gravity was a census. Here is what the census was, what it promised, and the theorem that ended the promise.
@@ -22,7 +29,7 @@ $$
 n = 21L, \qquad m = 14L, \qquad s = 3, \qquad V = (1, 5),
 $$
 
-with the radii $\delta = \bigl(-1,\ \tfrac{12a+7}{6(5a+3)},\ \tfrac{7}{12}\bigr)$. The first member has degree $105$; the next have degrees $273$, $441$, $609$, and so on without end. Twenty-one members were run through the exact census implementation and all pass. This is [promoted](https://github.com/dcposch/jc2-lean) at the skeleton level after a different-model review that re-derived the identities in $a$ symbolically.
+with the radii $\delta = \bigl(-1,\ \tfrac{12a+7}{6(5a+3)},\ \tfrac{7}{12}\bigr)$. The first member has degree $105$; the next have degrees $273$, $441$, $609$, and so on without end. Twenty-one members were run through the exact census implementation and all pass. This is [promoted](https://github.com/dcposch/jc2/blob/master/xmodel/n6-family-review-grok46-20260903.md) at the skeleton level after a different-model review that re-derived the identities in $a$ symbolically.
 
 The same morning brought a correction worth recording, because it is the kind of thing this site exists to record. The family was announced with its geometric degree pinned at $N = 6$. That value came from a packet that turned out to be only part of a Galois orbit. The orbit-admissible value is $N = 15a+9$, and it grows. The family stands; the pinned $N$ did not. A second ray, found in the review, does what the first was claimed to do: for $P = 7t+6$, $n = 9P$, $m = 6P$, the orbit-admissible $N$ is $6$ for every $t$, at degrees $54, 117, 180, \ldots$ That one is provisional, with the review as producer.
 

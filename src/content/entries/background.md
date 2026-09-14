@@ -2,9 +2,12 @@
 title: "Background: reversible maps and JC2"
 date: 2026-08-18
 description: "What was known before the campaign: why reversibility near every point does not obviously give a single global inverse, and how the difficulty concentrates at infinity."
+sources:
+  - label: "Background note"
+    href: "https://github.com/dcposch/jc2/blob/master/papers/jc2-background.md"
 ---
 
-The plane Jacobian conjecture asks whether a polynomial transformation that is reversible in a small neighborhood of every point must be reversible everywhere. Its hypothesis comes straight from multivariable calculus: the determinant of the derivative is a nonzero constant. Its conclusion is much stronger: the transformation has a single, globally defined inverse, and that inverse is also polynomial.
+The Plane Jacobian Conjecture asks whether a polynomial transformation that is reversible in a small neighborhood of every point must be reversible everywhere. Its hypothesis comes straight from multivariable calculus: the determinant of the derivative is a nonzero constant. Its conclusion is much stronger: the transformation has a single, globally defined inverse, and that inverse is also polynomial.
 
 This background describes the problem and the mathematical landscape before the campaign's results. The central difficulty is the passage from local information to global behavior, especially behavior at infinity.
 
@@ -49,7 +52,7 @@ $$
 F^{-1}(u,v)=\bigl(R(u,v),S(u,v)\bigr).
 $$
 
-The variables and coefficients here are complex numbers. Thus $F$ maps $\mathbb C^2$ to $\mathbb C^2$. A map satisfying the nonzero constant Jacobian condition is often called a *Keller map*, after Ott-Heinrich Keller, who posed the problem in 1939. The abbreviation **JC2** means the Jacobian conjecture in two variables. [Van den Essen's survey](https://smf.emath.fr/publications/polynomial-automorphisms-and-jacobian-conjecture) gives the classical formulation and its equivalent versions.
+The variables and coefficients here are complex numbers. Thus $F$ maps $\mathbb C^2$ to $\mathbb C^2$. A map satisfying the nonzero constant Jacobian condition is often called a *Keller map*, after Ott-Heinrich Keller, who posed the problem in 1939. The abbreviation **JC2** means the Jacobian Conjecture in two variables. [Van den Essen's survey](https://smf.emath.fr/publications/polynomial-automorphisms-and-jacobian-conjecture) gives the classical formulation and its equivalent versions.
 
 There are many nonlinear examples that satisfy the conclusion. Consider
 
