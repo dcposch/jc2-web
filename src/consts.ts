@@ -1,8 +1,8 @@
 export const SITE = {
   title: 'jc2.fun',
-  tagline: 'Exploring the plane Jacobian conjecture',
+  tagline: 'Exploring the Plane Jacobian Conjecture',
   description:
-    'An open, collaborative campaign to settle the plane Jacobian conjecture, publishing partial results, connections, new ideas, and failed approaches as they come.',
+    'An open, collaborative campaign to settle the Plane Jacobian Conjecture, publishing partial results, connections, new ideas, and failed approaches as they come.',
   x: 'https://x.com/dcposch',
   github: 'https://github.com/dcposch/jc2-web',
 } as const;

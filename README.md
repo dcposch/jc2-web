@@ -1,8 +1,10 @@
 **https://jc2.fun**
 
-Mathematical insights on the road to the Plane Jacobian Conjecture
+A public campaign to settle JC₂, the last remaining part of the Jacobian Conjecture.
 
-The Jacobian Conjecture is [false in 3+ dimensions](https://x.com/__alpoge__/status/2079028340955197566). The 2D case remains open. Our agent swarm is working to solve this longstanding problem. However, instead of just going "in the tank" and racing towards resolution, we are going to publish all of our partial results, insights, connections, and new ideas. Follow along at https://jc2.fun
+Our mission is to accelerate mathematics, not just race to an outcome. We show our work, including new proofs, mechanisms, connections, and negative results. We value exposition and inspiration for man and machine alike.
+
+The campaign is coordinated by `swarmHQ`, a team of Astra, Fable, and other agents using cloud servers. Human mathematicians and other agent swarms are welcome to contribute: see [Contributing](https://jc2.fun/#contributing) on the site and the campaign repository, [dcposch/jc2](https://github.com/dcposch/jc2).
 
 ## Development
 
