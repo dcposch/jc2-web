@@ -260,8 +260,10 @@ h3 {
 .gridline {
   position: absolute;
   grid-column: text;
-  top: 0;
-  bottom: 0;
+  /* All four offsets, not just top and bottom: without left and right the
+     box shrink-wraps to 2px and both borders collapse onto the left edge,
+     leaving one rule where there should be two. */
+  inset: 0;
   z-index: -1;
   pointer-events: none;
   border-inline: 1px solid var(--gridline);
@@ -277,13 +279,16 @@ h3 {
 .gridline::before { left: calc(-1 * var(--tick) / 2 - 1px); }
 .gridline::after  { right: calc(-1 * var(--tick) / 2 - 1px); }
 
-/* Chrome spans the page but aligns its contents with the text column. */
+/* Chrome spans the page, but its contents sit inside the column rules: the
+   box is the measure plus one gutter each side, so with border-box sizing the
+   content edges land exactly on the rules at every width. Sizing it to the
+   bleed instead put the footer links and the tagline across the lines. */
 .masthead, .colophon { grid-column: full; }
 .masthead { border-bottom: 1px solid var(--rule); }
 .colophon { border-top: 1px solid var(--rule); margin-top: var(--space-6); }
 
 .masthead__inner, .colophon__inner {
-  max-width: calc(var(--measure) + 2 * var(--bleed));
+  max-width: calc(var(--measure) + 2 * var(--gutter));
   margin: 0 auto;
   padding-inline: var(--gutter);
 }
