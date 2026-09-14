@@ -71,8 +71,10 @@ Next work
 [x] Register rebuilt around the all-degree fronts (2026-09-13). Every row's
     state is as banked in AUDIT.md or the LIVE STATE of 2026-09-06; no row is
     a placeholder. The escaping-values row cites CUSP-A-VOID (integration #9).
-[ ] Decide and document the contribution channel, then replace the homepage
-    Contributing placeholder.
+[x] Decide and document the contribution channel, then replace the homepage
+    Contributing placeholder. Done 2026-09-14: the homepage prose is final;
+    dcposch/jc2 carries the contributor contract (README.md), team/ folders,
+    issue and PR templates, and CI; swarmHQ triages the GitHub queue.
 [x] Seven entries published (2026-09-13): Background; the three degree-cell
     mechanisms (Theorem A, vertex gap, cube root); and the arc that follows,
     the census never empties, the trace identity that did not help, Moh's
