@@ -94,6 +94,9 @@ The characteristic-zero statement is elementary, and for $\nu = 1$ it is the cla
 
 The block-variety theorem that consumes this result is a separate statement and is **not** formalized. The Lean development covers Theorem A only.
 
+This mechanism was found in a single degree cell. For why cells alone cannot finish the problem, see [The census never empties](/entries/census-never-empties).
+
+
 ## A question to take away
 
 The positive-characteristic bound $\nu \deg A < p$ is sufficient, and the example $A = y^{p}+y$ shows some bound is needed. Is $\nu \deg A < p$ sharp? For $\nu = 1$ the example sits exactly at $\deg A = p$, so nothing between is ruled out by it. A counterexample with $1 < \deg A < p$, or a proof that none exists, would pin the statement down.

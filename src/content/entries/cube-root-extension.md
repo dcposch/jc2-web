@@ -62,6 +62,9 @@ This is the noncube branch and nothing else. It does not prove the cube branch, 
 
 Saying which half is done is the point. The noncube case is the one where the symmetry exists, which is exactly why it fell first. The cube case is harder for a reason that the proof above makes clear rather than hides: there is no deck action to grade by.
 
+This mechanism was found in a single degree cell. For why cells alone cannot finish the problem, see [The census never empties](/entries/census-never-empties).
+
+
 ## A question to take away
 
 The grading came free because $H$ was not a cube. When $H$ is a cube, $k(x)(H^{1/3}) = k(x)$ and there is no symmetry to exploit.

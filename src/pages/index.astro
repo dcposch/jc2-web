@@ -13,31 +13,51 @@ const entries = await publishedEntries();
 const avenues = [
   {
     n: '01',
-    name: 'Strip rigidity lemma',
+    name: 'Three mechanisms from degree cells',
     state: 'Proved · Lean',
     level: 'proved',
-    gap: 'Kernel-checked in Lean 4. The positive-characteristic extension needs a sharp bound.',
+    gap: 'Theorem A, the vertex gap, and the cube-root grading, each found in one cell and machine-checked there. The laboratory phase. The all-degree program below is built from them and from what the census taught.',
     href: '/entries/polynomial-ode-rigidity',
   },
   {
     n: '02',
-    name: 'Newton-polygon vertex gap',
-    state: 'Proved · Lean',
+    name: 'The census never empties',
+    state: 'Theorem',
     level: 'proved',
-    gap: 'Formalized for low-degree strip pairs. The uniform depth-two block is scaffolding only: the raw triangular block elimination and the outer-column theorem remain unformalized.',
-    href: '/entries/newton-polygon-vertex-gap',
+    gap: 'Three unbounded families pass every printed condition, so no degree bound can come from the numerical skeleton. Promoted at the skeleton level; the ray with N pinned at 6 is provisional. Geometric realisation of any member is not claimed.',
+    href: '/entries/census-never-empties',
   },
   {
     n: '03',
-    name: 'Cube-root extension at (6, 9)',
+    name: 'Trace and moment identities',
+    state: 'Proved · not a ceiling',
+    level: 'proved',
+    gap: 'The identities are true with no Keller hypothesis and were promoted with repairs. Their degree bound is attained, so they give a shape constraint on (e, q_max), vacuous on the frontier. What survived: a one-trace Keller test and exact remainder arithmetic for the interpolation engine.',
+    href: '/entries/trace-identity',
+  },
+  {
+    n: '04',
+    name: 'Moh\'s descent and theorem (T)',
     state: 'Partial',
     level: 'partial',
-    gap: 'The noncube exclusions are formalized. The cube branch and the maximum-partial-degree-eleven composition are not.',
-    href: '/entries/cube-root-extension',
+    gap: 'Descent to monomial-Jacobian pairs is promoted, with an erratum to Moh\'s Appendix II. Theorem (T) is proved on the K = 16 ray through t = 8; the uniform statement is open. Residual at n up to 200: 64 necessary configurations. Brute force is exhausted on every chart family.',
+    href: '/entries/moh-descent',
   },
-  { n: '04', name: 'The curve of escaping values', state: 'TODO', level: 'open', gap: 'TODO: confirm scope against AUDIT.md.' },
-  { n: '05', name: 'Branch symmetry census', state: 'TODO', level: 'open', gap: 'TODO: confirm scope against AUDIT.md.' },
-  { n: '06', name: 'The K = 16 family', state: 'TODO', level: 'open', gap: 'TODO: confirm scope against AUDIT.md.' },
+  {
+    n: '05',
+    name: 'Galois orbits and the actual-stabilizer screen',
+    state: 'Theorem',
+    level: 'proved',
+    gap: '(UNI) is not a theorem; the orbit-size law replaces it. The actual-stabilizer screen is promoted: 24,063 to 1,420 to 90 necessary configurations at n up to 200, and at n up to 100 it reproduces Moh\'s printed list exactly. Nested packing above s = 3 is open.',
+    href: '/entries/galois-orbits',
+  },
+  {
+    n: '06',
+    name: 'The curve of escaping values',
+    state: 'Theorem',
+    level: 'proved',
+    gap: 'CUSP-A-VOID, integration #9: the non-properness set of a noninvertible Keller map is never homeomorphic to the complex line. Producer Opus, hostile gate GPT-5.5 all confirmed, countermodel arm all survive. Entry to follow.',
+  },
 ];
 ---
 
@@ -75,7 +95,7 @@ const avenues = [
 
     <h2>What is left to do</h2>
 
-    {/* PLACEHOLDER — states and gaps for the last three rows are unconfirmed. */}
+    {/* States are as banked in AUDIT.md and the LIVE STATE of 2026-09-06. */}
     <div class="register">
       <ol>
         {avenues.map((a) => (

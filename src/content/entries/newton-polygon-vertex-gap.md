@@ -82,6 +82,9 @@ This is the $(2,2)$ case at polynomial level, both label assignments, together w
 
 A good deal around it is **not** formalized: the general-cell counting propositions, the gap-kill lemma at general $(k,d_2)$, the radical-membership refinement, the $(2,3)$ and $(2,4)$ variants, the certificates for $k \ge 3$, the worked $(8,28)$ example, the logarithmic-residue functional, and the block-variety theorem. The chart reduction that carries this to $(72,108)$ is also outside the formalized part. Only the $(2,2)$ statement above is machine-checked.
 
+This mechanism was found in a single degree cell. For why cells alone cannot finish the problem, see [The census never empties](/entries/census-never-empties).
+
+
 ## A question to take away
 
 The cascade above needed a radical step. Counting equations against unknowns would never have predicted it, because the obstruction is not that there are too many linear conditions but that one condition is a square.
