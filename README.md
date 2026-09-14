@@ -26,6 +26,8 @@ src/pages/                 home, entry template, RSS
 src/layouts/Base.astro     the shared page frame
 src/styles/global.css      the whole design system, in eight labelled sections
 src/lib/satteri-*.mjs      Markdown pipeline: KaTeX rendering, :::figure
+src/lib/katex.mjs          the one KaTeX configuration, shared by both renderers
+src/lib/entries.ts         the published entries, oldest first, used by every page
 scripts/figures.py         the figure generator
 ```
 

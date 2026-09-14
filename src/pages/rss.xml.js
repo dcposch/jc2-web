@@ -1,11 +1,9 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
+import { publishedEntries } from '../lib/entries';
 import { SITE } from '../consts';
 
 export async function GET(context) {
-  const entries = (await getCollection('entries', ({ data }) => !data.draft)).sort(
-    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-  );
+  const entries = (await publishedEntries()).toReversed();
   return rss({
     title: SITE.title,
     description: SITE.description,

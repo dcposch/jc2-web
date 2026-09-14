@@ -1,5 +1,6 @@
 ---
 import katex from 'katex';
+import { KATEX_OPTIONS } from '../lib/katex.mjs';
 
 interface Props {
   /** TeX source. */
@@ -10,11 +11,6 @@ interface Props {
 const { tex, display = false } = Astro.props;
 
 // Rendered here, at build time, so pages ship no math JavaScript.
-const html = katex.renderToString(tex, {
-  displayMode: display,
-  throwOnError: true,
-  strict: 'ignore',
-  macros: { '\\C': '\\mathbb{C}', '\\R': '\\mathbb{R}' },
-});
+const html = katex.renderToString(tex, { ...KATEX_OPTIONS, displayMode: display });
 ---
 <Fragment set:html={html} />

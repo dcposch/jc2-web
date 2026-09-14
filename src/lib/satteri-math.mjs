@@ -7,16 +7,11 @@
  */
 import katex from 'katex';
 import { defineMdastPlugin } from 'satteri';
-
-const OPTIONS = {
-  throwOnError: true,
-  strict: 'ignore',
-  macros: { '\\C': '\\mathbb{C}', '\\R': '\\mathbb{R}' },
-};
+import { KATEX_OPTIONS } from './katex.mjs';
 
 function render(value, displayMode, ctx, node) {
   try {
-    return katex.renderToString(value, { ...OPTIONS, displayMode });
+    return katex.renderToString(value, { ...KATEX_OPTIONS, displayMode });
   } catch (err) {
     ctx.report({
       message: `KaTeX could not render ${displayMode ? 'display' : 'inline'} math: ${value.trim()}\n  ${err.message}`,

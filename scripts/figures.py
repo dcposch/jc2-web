@@ -41,6 +41,19 @@ def lin(a, b, n=160):
     return [a + (b - a) * i / (n - 1) for i in range(n)]
 
 
+def heading(x, title, subtitle):
+    """A panel's title and one-line subtitle, in the standard position."""
+    return [
+        f'<text class="lbl-ink ttl" x="{x}" y="30">{title}</text>',
+        f'<text x="{x}" y="46">{subtitle}</text>',
+    ]
+
+
+def footnote(x, h, text):
+    """The faint closing line along the bottom of a figure."""
+    return f'<text class="lbl-faint" x="{x}" y="{h - 14}">{text}</text>'
+
+
 def svg(width, height, body, extra=""):
     return (
         f'<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" '
@@ -98,8 +111,7 @@ def fig_shear():
     out = []
 
     def panel(fr, sheared, title, sub):
-        g = [f'<text class="lbl-ink ttl" x="{fr.px}" y="30">{title}</text>',
-             f'<text x="{fr.px}" y="46">{sub}</text>']
+        g = heading(fr.px, title, sub)
         # Axes.
         g.append(f'<path class="axis" d="{fr.path([(xr[0], 0), (xr[1], 0)])}"/>')
         g.append(f'<path class="axis" d="{fr.path([(0, yr[0]), (0, yr[1])])}"/>')
@@ -154,10 +166,8 @@ def fig_wrap():
     left = Frame((-2.4, 2.4), (T0, T1), (56, 62, 210, 206))
     right = Frame((-2.9, 2.9), (-2.9, 2.9), (372, 62, 210, 206))
 
-    out.append('<text class="lbl-ink ttl" x="56" y="32">domain</text>')
-    out.append('<text x="56" y="48">(s, t), in strips of height 2 pi</text>')
-    out.append('<text class="lbl-ink ttl" x="372" y="32">image</text>')
-    out.append('<text x="372" y="48">the punctured plane</text>')
+    out += heading(56, 'domain', '(s, t), in strips of height 2 pi')
+    out += heading(372, 'image', 'the punctured plane')
 
     for k, base in enumerate((-math.pi, math.pi, 3 * math.pi)):
         top = base + 2 * math.pi
@@ -213,10 +223,8 @@ def fig_escape():
     left = Frame((-0.35, 3.4), (-0.6, 6.4), (56, 58, 215, 200))
     right = Frame((-0.35, 3.4), (-0.6, 2.4), (372, 58, 215, 200))
 
-    out.append('<text class="lbl-ink ttl" x="56" y="30">input</text>')
-    out.append('<text x="56" y="46">the path (1/t, t) runs off to infinity</text>')
-    out.append('<text class="lbl-ink ttl" x="372" y="30">output</text>')
-    out.append('<text x="372" y="46">its image settles on a finite point</text>')
+    out += heading(56, 'input', 'the path (1/t, t) runs off to infinity')
+    out += heading(372, 'output', 'its image settles on a finite point')
 
     for fr, ymax in ((left, 6.4), (right, 2.4)):
         out.append(f'<path class="axis" d="{fr.path([(-0.35, 0), (3.4, 0)])}"/>')
@@ -243,7 +251,7 @@ def fig_escape():
     out.append('<path class="arrow" d="M292 158 L352 158"/>')
     out.append('<path class="arrowhead" d="M352 158 l-6 -3.4 v6.8 Z"/>')
     out.append('<text class="lbl-mark math" x="310" y="150">H</text>')
-    out.append(f'<text class="lbl-faint" x="56" y="{h - 14}">not a Keller map: the Jacobian of H is x, which vanishes along a line</text>')
+    out.append(footnote(56, h, 'not a Keller map: the Jacobian of H is x, which vanishes along a line'))
 
     write(
         "escape-to-infinity",
@@ -261,10 +269,8 @@ def fig_monodromy():
     left = Frame((-1.7, 1.7), (-1.7, 1.7), (56, 62, 200, 200))
     right = Frame((-1.9, 1.9), (-1.4, 1.4), (360, 62, 230, 200))
 
-    out.append('<text class="lbl-ink ttl" x="56" y="30">an ordinary branch point</text>')
-    out.append('<text x="56" y="46">carrying w once around 0 swaps the roots of z² = w</text>')
-    out.append('<text class="lbl-ink ttl" x="360" y="30">the hypothetical Keller picture</text>')
-    out.append('<text x="360" y="46">the obstacle is the asymptotic curve, not a finite point</text>')
+    out += heading(56, 'an ordinary branch point', 'carrying w once around 0 swaps the roots of z² = w')
+    out += heading(360, 'the hypothetical Keller picture', 'the obstacle is the asymptotic curve, not a finite point')
 
     out.append(f'<path class="axis" d="{left.path([(-1.7, 0), (1.7, 0)])}"/>')
     out.append(f'<path class="axis" d="{left.path([(0, -1.7), (0, 1.7)])}"/>')
@@ -313,10 +319,8 @@ def fig_newton():
     left = Frame((-0.55, 3.6), (-0.55, 2.6), (96, 66, 285, 190))
     right = Frame((-1.4, 3.1), (-6.0, 6.0), (510, 66, 285, 190))
 
-    out.append('<text class="lbl-ink ttl" x="96" y="32">exponents</text>')
-    out.append('<text x="96" y="48">the monomials of y² − x³ − x, and their hull</text>')
-    out.append('<text class="lbl-ink ttl" x="510" y="32">the curve</text>')
-    out.append('<text x="510" y="48">a real slice of y² = x³ + x, against y = ±x^{3/2}</text>')
+    out += heading(96, 'exponents', 'the monomials of y² − x³ − x, and their hull')
+    out += heading(510, 'the curve', 'a real slice of y² = x³ + x, against y = ±x^{3/2}')
 
     # Lattice.
     for i in range(4):
@@ -351,7 +355,7 @@ def fig_newton():
     out.append(f'<path class="axis" d="{right.path([(0, -5.8), (0, 5.8)])}"/>')
     out.append(f'<text class="math lbl-ink" x="{right(2.05, 4.45)[0]:.1f}" y="{right(2.05, 4.45)[1]:.1f}">y² = x³ + x</text>')
     out.append(f'<text class="lbl-mark math" x="{right(1.55, -4.3)[0]:.1f}" y="{right(1.55, -4.3)[1]:.1f}">y = ±x^(3/2)</text>')
-    out.append(f'<text class="lbl-faint" x="510" y="{h - 14}">the two agree to leading order and separate below it</text>')
+    out.append(footnote(510, h, 'the two agree to leading order and separate below it'))
 
     write(
         "newton-polygon",
@@ -370,8 +374,7 @@ def fig_degree_lattice():
     fr = Frame((-0.7, 5.5), (-0.9, 10.7), (96, 62, 330, 246))
     LX = 476  # the legend column
 
-    out.append('<text class="lbl-ink ttl" x="96" y="30">degree pairs</text>')
-    out.append(f'<text x="96" y="46">which (deg A, deg C) can solve the identity, shown for nu = {nu}</text>')
+    out += heading(96, f'degree pairs', f'which (deg A, deg C) can solve the identity, shown for nu = {nu}')
 
     for i in range(6):
         for j in range(11):
@@ -425,7 +428,7 @@ def fig_degree_lattice():
         if mark is None:
             y += 12
 
-    out.append(f'<text class="lbl-faint" x="96" y="{h - 14}">off the dashed line the leading terms survive, so the degree must fall to zero</text>')
+    out.append(footnote(96, h, 'off the dashed line the leading terms survive, so the degree must fall to zero'))
 
     write(
         "degree-lattice",
@@ -455,8 +458,7 @@ def fig_vertex_gap():
         return g
 
     # Panel 1: the two strips, both narrow in the direction w = 2i - j.
-    out.append('<text class="lbl-ink ttl" x="96" y="32">narrow supports</text>')
-    out.append('<text x="96" y="48">every exponent sits in a thin band of w = 2i - j</text>')
+    out += heading(96, 'narrow supports', 'every exponent sits in a thin band of w = 2i - j')
     # Q occupies 0 <= w <= 3, P the narrower 0 <= w <= 2.
     out.append(f'<path class="strip-b" d="{left.path([(-0.25, lo), (2.3, hi), (3.8, hi), (1.3, lo)], close=True)}"/>')
     out.append(f'<path class="strip-a" d="{left.path([(-0.25, lo), (2.3, hi), (3.3, hi), (0.8, lo)], close=True)}"/>')
@@ -475,8 +477,7 @@ def fig_vertex_gap():
     out.append(f'<text class="math lbl-ink" x="{left(0, 0)[0] - 16:.1f}" y="{left(0, 4.4)[1]:.1f}">j</text>')
 
     # Panel 2: the Minkowski point that carries x-squared is a vertex.
-    out.append('<text class="lbl-ink ttl" x="516" y="32">one decomposition</text>')
-    out.append('<text x="516" y="48">the corner (3,1) splits in only one way</text>')
+    out += heading(516, 'one decomposition', 'the corner (3,1) splits in only one way')
     out += lattice(right)
     out.append(f'<path class="arrow" d="{right.path([(0, 0), (0.92, 0)])}"/>')
     au, av = right(0.92, 0)
@@ -499,7 +500,7 @@ def fig_vertex_gap():
     out.append(f'<text class="lbl-ink" x="{eu:.1f}" y="{ev:.1f}">one term, so</text>')
     out.append(f'<text class="lbl-mark" x="{eu:.1f}" y="{ev + 15:.1f}">a1 · b3 = 1</text>')
 
-    out.append(f'<text class="lbl-faint" x="96" y="{h - 14}">a corner has only one decomposition, so the sum collapses to a single product</text>')
+    out.append(footnote(96, h, 'a corner has only one decomposition, so the sum collapses to a single product'))
 
     write(
         "vertex-gap",
@@ -517,8 +518,7 @@ def fig_cube_root():
     out = []
     fr = Frame((-1.75, 1.75), (-1.75, 1.75), (118, 66, 200, 200))
 
-    out.append('<text class="lbl-ink ttl" x="96" y="32">three conjugate roots</text>')
-    out.append('<text x="96" y="48">the deck map turns each cube root into the next</text>')
+    out += heading(96, 'three conjugate roots', 'the deck map turns each cube root into the next')
 
     circle = [(math.cos(a), math.sin(a)) for a in lin(0, 2 * math.pi)]
     out.append(f'<path class="grid" d="{fr.path(circle, close=True)}"/>')
@@ -549,8 +549,7 @@ def fig_cube_root():
 
     # The weight ledger: powers of t sorted by their eigenvalue under the map.
     CX = [452, 588, 716]
-    out.append('<text class="lbl-ink ttl" x="452" y="32">what survives</text>')
-    out.append('<text x="452" y="48">powers of t, sorted by how the deck map scales them</text>')
+    out += heading(452, 'what survives', 'powers of t, sorted by how the deck map scales them')
     heads = ["weight 0", "weight 1", "weight 2"]
     rows = [["1", "t", "t²"], ["t³ = H", "t⁴", "t⁵"], ["t⁶ = H²", "t⁷", "t⁸"]]
     out.append(f'<path class="edge" d="M{CX[0] - 12} 76 v104"/>')
@@ -565,7 +564,7 @@ def fig_cube_root():
     out.append(f'<text class="math lbl-faint" x="{CX[1]}" y="202">scaled by ω</text>')
     out.append(f'<text class="math lbl-faint" x="{CX[2]}" y="202">scaled by ω²</text>')
 
-    out.append(f'<text class="lbl-faint" x="96" y="{h - 14}">an equation can only mention weight 0 if it is to descend to the base field</text>')
+    out.append(footnote(96, h, 'an equation can only mention weight 0 if it is to descend to the base field'))
 
     write(
         "cube-root",

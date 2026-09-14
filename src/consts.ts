@@ -20,14 +20,10 @@ export function canonicalPath(pathname: string): string {
 }
 
 /**
- * Entry dates are historical and displayed as written, without timezone drift.
- * Stamped as 2026.08.18 — unambiguous, sorts naturally, and sets like a part
- * number rather than a byline.
+ * Entry dates are historical and shown as written, without timezone drift.
+ * The same ISO form serves the display and the datetime attribute: it is
+ * unambiguous, sorts naturally, and sets like a stamp rather than a byline.
  */
-export function formatDate(date: Date): string {
-  return isoDate(date).replace(/-/g, '.');
-}
-
 export function isoDate(date: Date): string {
   return date.toISOString().slice(0, 10);
 }

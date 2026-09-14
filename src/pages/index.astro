@@ -1,13 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Math from '../components/Math.astro';
-import { SITE, formatDate, isoDate } from '../consts';
+import { SITE, isoDate } from '../consts';
+import { publishedEntries } from '../lib/entries';
 import shearSvg from '../figures/shear-grid.svg?raw';
 
-const entries = (await getCollection('entries', ({ data }) => !data.draft)).sort(
-  (a, b) => a.data.date.valueOf() - b.data.date.valueOf(),
-);
+const entries = await publishedEntries();
 
 /* The register of avenues. States and gaps for the first three rows are taken
    from jc2-lean's own README so the page does not overstate them; the rest are
@@ -125,7 +123,7 @@ const avenues = [
         {entries.map((entry) => (
           <li class="entry-row">
             <time class="label entry-row__date" datetime={isoDate(entry.data.date)}>
-              {formatDate(entry.data.date)}
+              {isoDate(entry.data.date)}
             </time>
             <div>
               <a class="entry-row__title" href={`/entries/${entry.id}`}>{entry.data.title}</a>
