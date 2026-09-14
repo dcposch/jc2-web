@@ -62,7 +62,7 @@ def svg(width, height, body, extra=""):
 
 
 # Rough advance widths, in px per character, for the fonts the figures use.
-_ADVANCE = {"": 6.3, "ttl": 8.4, "math": 6.6}
+_ADVANCE = {"": 6.6, "ttl": 8.6, "math": 6.8}
 
 
 def lint(name, markup, width):
@@ -71,11 +71,14 @@ def lint(name, markup, width):
 
     problems = []
     for m in _re.finditer(r'<text class="([^"]*)" x="([\d.]+)" y="([\d.]+)">([^<]*)</text>'
-                          r'|<text x="([\d.]+)" y="([\d.]+)" class="([^"]*)">([^<]*)</text>', markup):
+                          r'|<text x="([\d.]+)" y="([\d.]+)" class="([^"]*)">([^<]*)</text>'
+                          r'|<text x="([\d.]+)" y="([\d.]+)">([^<]*)</text>', markup):
         if m.group(4) is not None:
             cls, x, y, text = m.group(1), float(m.group(2)), float(m.group(3)), m.group(4)
-        else:
+        elif m.group(8) is not None:
             cls, x, y, text = m.group(7), float(m.group(5)), float(m.group(6)), m.group(8)
+        else:
+            cls, x, y, text = "", float(m.group(9)), float(m.group(10)), m.group(11)
         kind = "ttl" if "ttl" in cls else ("math" if "math" in cls else "")
         end = x + len(text) * _ADVANCE[kind]
         if end > width - 4:
@@ -269,8 +272,8 @@ def fig_monodromy():
     left = Frame((-1.7, 1.7), (-1.7, 1.7), (56, 62, 200, 200))
     right = Frame((-1.9, 1.9), (-1.4, 1.4), (360, 62, 230, 200))
 
-    out += heading(56, 'an ordinary branch point', 'carrying w once around 0 swaps the roots of z² = w')
-    out += heading(360, 'the hypothetical Keller picture', 'the obstacle is the asymptotic curve, not a finite point')
+    out += heading(56, 'an ordinary branch point', 'one loop around 0 swaps the roots of z² = w')
+    out += heading(360, 'the hypothetical Keller picture', 'the obstacle is a curve, not a point')
 
     out.append(f'<path class="axis" d="{left.path([(-1.7, 0), (1.7, 0)])}"/>')
     out.append(f'<path class="axis" d="{left.path([(0, -1.7), (0, 1.7)])}"/>')
@@ -573,6 +576,245 @@ def fig_cube_root():
     )
 
 
+# --------------------------------------------------------------------------
+# 9. The census never empties: three unbounded families of admissible skeletons.
+#    Data from AUDIT.md integration #17 deltas (n) and (w).
+# --------------------------------------------------------------------------
+def fig_census_rays():
+    h = 340
+    out = []
+    fr = Frame((0, 830), (0, 74), (96, 62, 470, 240))
+    LX = 612
+
+    out.append('<text class="lbl-ink ttl" x="96" y="30">three unbounded families</text>')
+    out.append('<text x="96" y="46">every member passes all thirteen of Moh\'s printed conditions</text>')
+
+    # Axes and ticks.
+    out.append(f'<path class="axis" d="{fr.path([(0, 0), (830, 0)])}"/>')
+    out.append(f'<path class="axis" d="{fr.path([(0, 0), (0, 74)])}"/>')
+    for n in (200, 400, 600, 800):
+        u, v = fr(n, 0)
+        out.append(f'<path class="axis" d="M{u:.1f} {v:.1f} v4"/>')
+        out.append(f'<text x="{u - 10:.1f}" y="{v + 16:.1f}">{n}</text>')
+    for N in (20, 40, 60):
+        u, v = fr(0, N)
+        out.append(f'<path class="axis" d="M{u - 4:.1f} {v:.1f} h4"/>')
+        out.append(f'<text x="{u - 24:.1f}" y="{v + 4:.1f}">{N}</text>')
+    out.append(f'<text class="math lbl-ink" x="{fr(745, 0)[0]:.1f}" y="{fr(0, 0)[1] - 8:.1f}">n = deg g</text>')
+    out.append(f'<text class="math lbl-ink" x="{fr(0, 0)[0] + 6:.1f}" y="{fr(0, 72)[1] - 2:.1f}">N</text>')
+
+    sol = [(168 * a + 105, 15 * a + 9) for a in range(5)]         # L = 8a+5
+    a26 = [(9 * (7 * t + 6), 6) for t in range(6)]                # A2 = 6 ray
+    k16 = [(48 * t + 16, 6 * t + 3) for t in range(1, 9)]         # K = 16 ray
+
+    for pts in (sol, a26, k16):
+        out.append(f'<path class="guide" d="{fr.path([pts[0], pts[-1]])}"/>')
+    for x, y in sol:
+        u, v = fr(x, y); out.append(f'<circle class="dot" cx="{u:.2f}" cy="{v:.2f}" r="3.6"/>')
+    for x, y in a26:
+        u, v = fr(x, y); out.append(f'<circle class="solution" cx="{u:.2f}" cy="{v:.2f}" r="4"/>')
+    for x, y in k16:
+        u, v = fr(x, y); out.append(f'<rect class="sqr" x="{u - 3:.2f}" y="{v - 3:.2f}" width="6" height="6"/>')
+
+    # Legend.
+    y = 96
+    # Tiers live in the caption, where there is room to say them properly.
+    rows = [
+        ("dot", "L = 8a + 5 ray"), (None, "n = 21L, N = 15a + 9"),
+        ("solution", "A2 = 6 ray"), (None, "n = 9(7t + 6), N = 6 for all t"),
+        ("sqr", "K = 16 ray"), (None, "n = 48t + 16, N = 6t + 3"),
+    ]
+    for mark, text in rows:
+        if mark == "dot":
+            out.append(f'<circle class="dot" cx="{LX + 8}" cy="{y - 4}" r="3.6"/>')
+        elif mark == "solution":
+            out.append(f'<circle class="solution" cx="{LX + 8}" cy="{y - 4}" r="4"/>')
+        elif mark == "sqr":
+            out.append(f'<rect class="sqr" x="{LX + 5}" y="{y - 7}" width="6" height="6"/>')
+        out.append(f'<text class="{"lbl-ink" if mark else "lbl-faint"}" x="{LX + 26}" y="{y}">{text}</text>')
+        y += 16 if mark else 26
+
+    out.append(f'<text class="lbl-faint" x="96" y="{h - 14}">no degree is the last one, so no ceiling can come from the numerical skeleton alone</text>')
+    write(
+        "census-rays",
+        "Three unbounded families of Moh-admissible skeletons, geometric degree N against n.",
+        svg(WIDE, h, "\n".join(out), extra=' preserveAspectRatio="xMidYMid meet"'),
+    )
+
+
+# --------------------------------------------------------------------------
+# 10. The trace test: deg_x of Tr(f^(k+1)) on a Keller pair and on a control.
+#     Data computed by sympy on (x+y^2, y+(x+y^2)^3) and (x+y^2, y^3+xy).
+# --------------------------------------------------------------------------
+def fig_trace_degrees():
+    h = 300
+    out = []
+    fr = Frame((-0.5, 5.6), (-0.6, 6.9), (76, 60, 270, 196))
+    keller = [0, 0, 0, 0, 0, 1]
+    control = [1, 2, 3, 4, 5, 6]
+
+    out.append('<text class="lbl-ink ttl" x="76" y="30">trace degrees</text>')
+    out.append('<text x="76" y="46">the x-degree of Tr(f^(k+1)), for k = 0 to 5</text>')
+
+    out.append(f'<path class="axis" d="{fr.path([(-0.3, 0), (5.5, 0)])}"/>')
+    out.append(f'<path class="axis" d="{fr.path([(0, -0.3), (0, 6.6)])}"/>')
+    for k in range(6):
+        u, v = fr(k, 0)
+        out.append(f'<text x="{u - 3:.1f}" y="{v + 16:.1f}">{k}</text>')
+    for d in (2, 4, 6):
+        u, v = fr(0, d)
+        out.append(f'<text x="{u - 20:.1f}" y="{v + 4:.1f}">{d}</text>')
+    out.append(f'<text class="math lbl-ink" x="{fr(5.1, 0)[0]:.1f}" y="{fr(0, 0)[1] + 32:.1f}">k</text>')
+
+    pts = [(k, d) for k, d in enumerate(control)]
+    out.append(f'<path class="curve" d="{fr.path(pts)}"/>')
+    for k, d in pts:
+        u, v = fr(k, d); out.append(f'<circle class="dot" cx="{u:.2f}" cy="{v:.2f}" r="3.4"/>')
+    kp = [(k, d) for k, d in enumerate(keller)]
+    out.append(f'<path class="dashed" d="{fr.path(kp)}"/>')
+    for k, d in kp:
+        u, v = fr(k, d); out.append(f'<circle class="solution" cx="{u:.2f}" cy="{v:.2f}" r="4"/>')
+
+    LX = 392
+    out.append(f'<path class="curve" d="M{LX} 98 h18"/><circle class="dot" cx="{LX + 9}" cy="98" r="3.4"/>')
+    out.append(f'<text class="lbl-ink" x="{LX + 28}" y="102">not Keller: grows with k</text>')
+    out.append(f'<text class="math lbl-faint" x="{LX + 28}" y="118">(x + y², y³ + xy)</text>')
+    out.append(f'<path class="dashed" d="M{LX} 150 h18"/><circle class="solution" cx="{LX + 9}" cy="150" r="4"/>')
+    out.append(f'<text class="lbl-ink" x="{LX + 28}" y="154">Keller: stays on the floor</text>')
+    out.append(f'<text class="math lbl-faint" x="{LX + 28}" y="170">(x + y², y + (x + y²)³)</text>')
+
+    out.append(f'<text class="lbl-faint" x="76" y="{h - 14}">the k = 0 point is already a Keller test: a constant Jacobian makes Tr(f) free of x</text>')
+    write(
+        "trace-degrees",
+        "deg_x of Tr(f^(k+1)) for a Keller automorphism and a non-Keller control.",
+        svg(W, h, "\n".join(out)),
+    )
+
+
+# --------------------------------------------------------------------------
+# 11. Moh's descent: a pair of degrees (n, m) with u_s = 1 falls to (n/d_s, m/d_s).
+#     Rows from Moh p.207 and from AUDIT.md deltas 17(t), 17(w).
+# --------------------------------------------------------------------------
+def fig_descent():
+    h = 340
+    out = []
+    fr = Frame((0, 178), (0, 128), (96, 62, 420, 240))
+    LX = 566
+
+    out.append('<text class="lbl-ink ttl" x="96" y="30">descent</text>')
+    out.append('<text x="96" y="46">each pair falls along its own ray through the origin, divided by d_s</text>')
+
+    out.append(f'<path class="axis" d="{fr.path([(0, 0), (175, 0)])}"/>')
+    out.append(f'<path class="axis" d="{fr.path([(0, 0), (0, 125)])}"/>')
+    out.append(f'<text class="math lbl-ink" x="{fr(168, 0)[0]:.1f}" y="{fr(0, 0)[1] - 8:.1f}">n</text>')
+    out.append(f'<text class="math lbl-ink" x="{fr(0, 0)[0] - 14:.1f}" y="{fr(0, 121)[1]:.1f}">m</text>')
+
+    # The K = 16 ray and its descended image, both through the origin's direction.
+    out.append(f'<path class="guide" d="{fr.path([(0, 0), (172, 172 * 2 / 3)])}"/>')
+
+    arrows = [((64, 48), (16, 12), "4"), ((84, 56), (21, 14), "4"), ((75, 50), (15, 10), "5"),
+              ((112, 80), (28, 20), "4"), ((160, 112), (40, 28), "4"),
+              ((105, 70), (15, 10), "7"), ((105, 70), (21, 14), "5")]
+    for (n0, m0), (n1, m1), d in arrows:
+        # Stop short of the child so the head does not sit on the marker.
+        t = 0.93
+        end = (n1 + (n0 - n1) * (1 - t), m1 + (m0 - m1) * (1 - t))
+        out.append(f'<path class="arrow" d="{fr.path([(n0, m0), end])}"/>')
+        eu, ev = fr(*end); su, sv = fr(n0, m0)
+        dx, dy = eu - su, ev - sv; L = math.hypot(dx, dy) or 1; dx, dy = dx / L * 7, dy / L * 7
+        out.append(f'<path class="arrowhead" d="M{eu:.2f} {ev:.2f} l{-dx + dy * 0.45:.2f} {-dy - dx * 0.45:.2f} l{-dy * 0.9:.2f} {dx * 0.9:.2f} Z"/>')
+        mu, mv = fr((n0 + n1) / 2, (m0 + m1) / 2)
+        side = 1 if (n0 + m0) % 2 else -1
+        out.append(f'<text class="lbl-mark" x="{mu + 5 * side + 2:.1f}" y="{mv - 9 * side + 3:.1f}">÷{d}</text>')
+    parents = {(64, 48), (84, 56), (75, 50), (112, 80), (160, 112), (105, 70)}
+    children = {(16, 12), (21, 14), (15, 10), (28, 20), (40, 28)}
+    above = {(64, 48): False, (84, 56): True, (75, 50): False, (112, 80): True, (160, 112): True, (105, 70): False}
+    for n0, m0 in parents:
+        u, v = fr(n0, m0); out.append(f'<circle class="dot" cx="{u:.2f}" cy="{v:.2f}" r="3.8"/>')
+        dy = -8 if above[(n0, m0)] else 14
+        out.append(f'<text class="lbl-faint" x="{u + 7:.1f}" y="{v + dy:.1f}">({n0},{m0})</text>')
+    for n1, m1 in children:
+        u, v = fr(n1, m1); out.append(f'<circle class="solution" cx="{u:.2f}" cy="{v:.2f}" r="4.2"/>')
+
+    y = 96
+    rows = [("dot", "parent pair (n, m)"), ("solution", "child pair (n/d_s, m/d_s)"),
+            (None, ""), ("guide", "the K = 16 ray, n : m = 3 : 2"),
+            (None, "t = 1 is (64, 48), t = 2 is (112, 80)"),
+            (None, ""), (None, "(105, 70) descends two ways,"), (None, "to (15, 10) and to (21, 14)")]
+    for mark, text in rows:
+        if mark == "dot": out.append(f'<circle class="dot" cx="{LX + 8}" cy="{y - 4}" r="3.8"/>')
+        elif mark == "solution": out.append(f'<circle class="solution" cx="{LX + 8}" cy="{y - 4}" r="4.2"/>')
+        elif mark == "guide": out.append(f'<path class="guide" d="M{LX} {y - 4} h18"/>')
+        if text: out.append(f'<text class="{"lbl-ink" if mark else "lbl-faint"}" x="{LX + 26}" y="{y}">{text}</text>')
+        y += 18 if text else 8
+
+    out.append(f'<text class="lbl-faint" x="96" y="{h - 14}">the children have a monomial Jacobian, and live where the campaign already holds certificates</text>')
+    write(
+        "descent",
+        "Moh's descent: parent degree pairs falling to their descended pairs along rays through the origin.",
+        svg(WIDE, h, "\n".join(out), extra=' preserveAspectRatio="xMidYMid meet"'),
+    )
+
+
+# --------------------------------------------------------------------------
+# 12. Galois orbits of discs, and the screen they license.
+#     Counts from AUDIT.md 17(ggggggggggg) and the 2026-09-05 LIVE STATE.
+# --------------------------------------------------------------------------
+def fig_orbit_screen():
+    h = 340
+    out = []
+
+    out.append('<text class="lbl-ink ttl" x="96" y="30">one tower</text>')
+    out.append('<text x="96" y="46">the deck action rotates the discs below each split</text>')
+    # A schematic s = 3 tower: D3 splits into a major and a minor child; the
+    # major child splits into A2 conjugate bottom discs forming one orbit.
+    D3 = (236, 92); D2 = (176, 158); D2m = (316, 158)
+    bottoms = [(96 + 52 * i, 232) for i in range(4)]
+    minor_child = (316, 232)
+    for a, b in ((D3, D2), (D3, D2m), (D2m, minor_child)):
+        out.append(f'<path class="link" d="M{a[0]} {a[1]} L{b[0]} {b[1]}"/>')
+    for b in bottoms:
+        out.append(f'<path class="link" d="M{D2[0]} {D2[1]} L{b[0]} {b[1]}"/>')
+    for (cx, cy), r in ((D3, 9), (D2, 8), (D2m, 7)):
+        out.append(f'<circle class="node" cx="{cx}" cy="{cy}" r="{r}"/>')
+    for cx, cy in bottoms:
+        out.append(f'<circle class="dot" cx="{cx}" cy="{cy}" r="4.5"/>')
+    out.append(f'<circle class="node" cx="{minor_child[0]}" cy="{minor_child[1]}" r="4.5"/>')
+    # The orbit: an arc through the four conjugate bottoms.
+    out.append(f'<path class="deck" d="M{bottoms[0][0] - 14} {bottoms[0][1] + 16} Q {(bottoms[0][0] + bottoms[-1][0]) / 2} {bottoms[0][1] + 44} {bottoms[-1][0] + 14} {bottoms[-1][1] + 16}"/>')
+    out.append(f'<text class="math lbl-ink" x="{D3[0] + 14}" y="{D3[1] + 4}">D₃</text>')
+    out.append(f'<text class="math lbl-ink" x="{D2[0] - 30}" y="{D2[1] + 4}">D₂</text>')
+    out.append(f'<text class="lbl-faint" x="{D2m[0] + 12}" y="{D2m[1] + 4}">minor</text>')
+    out.append(f'<text class="lbl-mark" x="{D2[0] + 52}" y="{D2[1] + 32}">a (10) level</text>')
+    out.append(f'<text class="lbl-mark" x="{D2[0] + 52}" y="{D2[1] + 46}">ω₂ = A₂</text>')
+    out.append(f'<text class="lbl-faint" x="{D2m[0] + 12}" y="{D2m[1] + 78}">an (11) level: ω = 1</text>')
+    out.append(f'<text class="lbl-mark" x="{bottoms[0][0] - 10}" y="{bottoms[0][1] + 60}">one orbit of bottom discs, |O| = A₂</text>')
+
+    # The screen as a funnel, log scale.
+    FX, FW = 520, 300
+    out.append('<text class="lbl-ink ttl" x="520" y="30">the screen at n ≤ 200</text>')
+    out.append('<text x="520" y="46">necessary configurations after each theorem</text>')
+    counts = [(24063, "printed (1) to (13) rows", "lbl-faint"),
+              (1420, "coarse stabilizer", "lbl-faint"),
+              (90, "actual stabilizer: theorem", "lbl-ink"),
+              (64, "full conjunction, with Xu", "lbl-ink")]
+    top = math.log10(24063)
+    y = 82
+    for c, lbl, cls in counts:
+        w = FW * math.log10(c) / top
+        bar = "bar-mark" if c <= 90 else "bar"
+        out.append(f'<rect class="{bar}" x="{FX}" y="{y}" width="{w:.1f}" height="22"/>')
+        out.append(f'<text class="lbl-ink" x="{FX + 6}" y="{y + 15}">{c:,}</text>')
+        out.append(f'<text class="{cls}" x="{FX}" y="{y + 38}">{lbl}</text>')
+        y += 58
+    out.append(f'<text class="lbl-faint" x="96" y="{h - 14}">at n ≤ 100 the actual screen keeps exactly the six rows Moh printed in 1983</text>')
+    write(
+        "orbit-screen",
+        "A Galois orbit of bottom discs in one tower, and the funnel of necessary configurations at n <= 200.",
+        svg(WIDE, h, "\n".join(out), extra=' preserveAspectRatio="xMidYMid meet"'),
+    )
+
+
 if __name__ == "__main__":
     print("generating figures ->", OUT)
     fig_shear()
@@ -583,3 +825,7 @@ if __name__ == "__main__":
     fig_degree_lattice()
     fig_vertex_gap()
     fig_cube_root()
+    fig_census_rays()
+    fig_trace_degrees()
+    fig_descent()
+    fig_orbit_screen()

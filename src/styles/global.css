@@ -607,3 +607,11 @@ h3 {
 
 /* The deck action in a Galois figure: a solid arc carrying one root to the next. */
 :is(.figure, .statement__plate) svg .deck { stroke: var(--mark); stroke-width: 1.4; opacity: 0.85; }
+
+/* Marks for the all-degree figures: a square series marker, a tree node and
+   its links, and log-scale funnel bars. */
+:is(.figure, .statement__plate) svg .sqr      { fill: var(--fg); stroke: none; }
+:is(.figure, .statement__plate) svg .node     { fill: var(--paper-raised); stroke: var(--fg); stroke-width: 1.4; }
+:is(.figure, .statement__plate) svg .link     { stroke: var(--fg-muted); stroke-width: 1; }
+:is(.figure, .statement__plate) svg .bar      { fill: var(--fg-muted); opacity: 0.18; stroke: none; }
+:is(.figure, .statement__plate) svg .bar-mark { fill: var(--mark); opacity: 0.55; stroke: none; }
