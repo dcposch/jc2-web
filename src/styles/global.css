@@ -143,6 +143,11 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* The UA stylesheet gives <figure> a 40px inline margin. Every figure and
+   the statement plate are figures, and their spacing is set in section 7 and
+   8, so the default must go or they all sit 40px inside their grid area. */
+figure { margin: 0; }
+
 ::selection { background: var(--selection); color: var(--ink); }
 
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -279,19 +284,20 @@ h3 {
 .gridline::before { left: calc(-1 * var(--tick) / 2 - 1px); }
 .gridline::after  { right: calc(-1 * var(--tick) / 2 - 1px); }
 
-/* Chrome spans the page, but its contents sit inside the column rules: the
-   box is the measure plus one gutter each side, so with border-box sizing the
-   content edges land exactly on the rules at every width. Sizing it to the
-   bleed instead put the footer links and the tagline across the lines. */
+/* Chrome spans the page. The masthead reaches out to the bleed, past the
+   column rules, so the wordmark and tagline frame the whole sheet. The footer
+   sits inside the rules: its box is the measure plus one gutter each side, so
+   with border-box sizing the links land exactly on the left rule. */
 .masthead, .colophon { grid-column: full; }
 .masthead { border-bottom: 1px solid var(--rule); }
 .colophon { border-top: 1px solid var(--rule); margin-top: var(--space-6); }
 
 .masthead__inner, .colophon__inner {
-  max-width: calc(var(--measure) + 2 * var(--gutter));
   margin: 0 auto;
   padding-inline: var(--gutter);
 }
+.masthead__inner { max-width: calc(var(--measure) + 2 * var(--bleed) + 2 * var(--gutter)); }
+.colophon__inner { max-width: calc(var(--measure) + 2 * var(--gutter)); }
 .masthead__inner {
   padding-block: var(--space-2);
   display: flex;
