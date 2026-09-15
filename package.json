@@ -2,6 +2,7 @@
   "name": "jc2-web",
   "type": "module",
   "version": "0.1.0",
+  "license": "Apache-2.0",
   "private": true,
   "scripts": {
     "figures": "python3 scripts/figures.py && npm run clean:cache",

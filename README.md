@@ -94,3 +94,10 @@ Add `src/content/entries/<slug>.md` with `title`, `date`, and a one-sentence
 on the index and the date in the feed. Set `draft: true` to keep an entry off
 the index and the feed while it is being written. Nothing else needs editing —
 the index, the feed and the previous/next links all follow.
+
+## License
+
+The site's code is licensed under the Apache License 2.0; see [LICENSE](LICENSE). The
+entries in `src/content/entries/` and the figures are licensed under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), with credit to the author
+named on each entry.
