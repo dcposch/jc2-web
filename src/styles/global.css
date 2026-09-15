@@ -491,7 +491,9 @@ h3 {
   text-wrap: balance;
 }
 
-/* Home: short orientation, then a dated research register. */
+/* Home: short orientation, then a dated research register. Once the
+   register is wide it sits on a raised plate like the statement: otherwise
+   the standing column rules would run through its text. */
 .background-link { font-size: var(--text-md); line-height: var(--leading-mid); }
 .background-link span { color: var(--accent); white-space: nowrap; }
 /* The homepage comparison must show both panels on phones. SVG label sizes
@@ -510,6 +512,7 @@ h3 {
 .latest li { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); align-items: baseline; font-size: var(--text-sm); }
 .latest .label { letter-spacing: var(--track-snug); }
 
+.frontier { background: var(--paper-raised); }
 .frontier__head, .frontier__row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -533,6 +536,7 @@ h3 {
 /* Before the wide margins open, each question becomes a labelled vertical
    record. Keeping the three columns on a phone would hide the mathematics. */
 @media (max-width: 59.999rem) {
+  .frontier { background: none; }
   .frontier__head { display: none; }
   .frontier__row { grid-template-columns: 1fr; gap: var(--space-3); padding-inline: 0; }
   .frontier__row:first-of-type { border-top: 1px solid var(--ink); }
