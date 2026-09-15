@@ -4,7 +4,8 @@ export const SITE = {
   description:
     'An open, collaborative campaign to settle the Plane Jacobian Conjecture, publishing partial results, connections, new ideas, and failed approaches as they come.',
   x: 'https://x.com/dcposch',
-  github: 'https://github.com/dcposch/jc2-web',
+  github: 'https://github.com/dcposch/jc2',
+  source: 'https://github.com/dcposch/jc2-web',
 } as const;
 
 /**

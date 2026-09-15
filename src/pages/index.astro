@@ -3,77 +3,22 @@ import Base from '../layouts/Base.astro';
 import Math from '../components/Math.astro';
 import { SITE, isoDate } from '../consts';
 import { publishedEntries } from '../lib/entries';
+import { frontier } from '../data/frontier';
 import shearSvg from '../figures/shear-grid.svg?raw';
 
 const entries = await publishedEntries();
-
-/* The register of avenues. States and gaps for the first three rows are taken
-   from jc2-lean's own README so the page does not overstate them; the rest are
-   placeholders to be confirmed against AUDIT.md before this goes live. */
-const avenues = [
-  {
-    n: '01',
-    name: 'Three mechanisms from degree cells',
-    state: 'Proved · Lean',
-    level: 'proved',
-    gap: 'Theorem A, the vertex gap, and the cube-root grading, each found in one cell and machine-checked there. The laboratory phase. The all-degree program below is built from them and from what the census taught.',
-    href: '/entries/polynomial-ode-rigidity',
-  },
-  {
-    n: '02',
-    name: 'The census never empties',
-    state: 'Theorem',
-    level: 'proved',
-    gap: 'Three unbounded families pass every printed condition, so no degree bound can come from the numerical skeleton. Promoted at the skeleton level; the ray with N pinned at 6 is provisional. Geometric realisation of any member is not claimed.',
-    href: '/entries/census-never-empties',
-  },
-  {
-    n: '03',
-    name: 'Trace and moment identities',
-    state: 'Proved · not a ceiling',
-    level: 'proved',
-    gap: 'The identities are true with no Keller hypothesis and were promoted with repairs. Their degree bound is attained, so they give a shape constraint on (e, q_max), vacuous on the frontier. What survived: a one-trace Keller test and exact remainder arithmetic for the interpolation engine.',
-    href: '/entries/trace-identity',
-  },
-  {
-    n: '04',
-    name: 'Moh\'s descent and theorem (T)',
-    state: 'Partial',
-    level: 'partial',
-    gap: 'Descent to monomial-Jacobian pairs is promoted, with an erratum to Moh\'s Appendix II. Theorem (T) is proved on the K = 16 ray through t = 8; the uniform statement is open. Residual at n up to 200: 64 necessary configurations. Brute force is exhausted on every chart family.',
-    href: '/entries/moh-descent',
-  },
-  {
-    n: '05',
-    name: 'Galois orbits and the actual-stabilizer screen',
-    state: 'Theorem',
-    level: 'proved',
-    gap: '(UNI) is not a theorem; the orbit-size law replaces it. The actual-stabilizer screen is promoted: 24,063 to 1,420 to 90 necessary configurations at n up to 200, and at n up to 100 it reproduces Moh\'s printed list exactly. Nested packing above s = 3 is open.',
-    href: '/entries/galois-orbits',
-  },
-  {
-    n: '06',
-    name: 'The curve of escaping values',
-    state: 'Theorem',
-    level: 'proved',
-    gap: 'CUSP-A-VOID, integration #9: the non-properness set of a noninvertible Keller map is never homeomorphic to the complex line. Producer Opus, hostile gate GPT-5.5 all confirmed, countermodel arm all survive. Entry to follow.',
-  },
-];
+const goal = '/goal read the README. Your mission is to resolve JC2';
+const updated = frontier.updated.slice(0, 16).replace('T', ' ');
 ---
 
 <Base title="The Road to JC₂">
   <div class="prose">
     <header class="page-head">
       <h1>The Road to JC<sub>2</sub></h1>
-
       <p class="lede">
-        A public campaign to settle JC<sub>2</sub>, the last remaining part of the Jacobian Conjecture.
+        The Jacobian Conjecture fell in higher dimensions. Two variables remain open.
       </p>
-      <p>
-        Our mission is to accelerate mathematics, not just race to an outcome.
-        We show our work, including new proofs, mechanisms, connections, and negative results.
-        We value exposition and inspiration for man and machine alike.
-      </p>
+      <p>A public campaign to resolve the Plane Jacobian Conjecture, JC<sub>2</sub>.</p>
     </header>
 
     <figure
@@ -84,70 +29,99 @@ const avenues = [
       <div class="statement__plate" set:html={shearSvg} />
       <Math display tex={String.raw`F(x,y)=(x+y^{2},\,y)`} />
       <figcaption class="statement__gloss">
-        A polynomial map with constant nonzero Jacobian. JC<sub>2</sub> says every such
-        map is invertible.
+        A polynomial map with constant nonzero Jacobian. The second coordinate remembers
+        the height: subtract its square to undo the slide. JC<sub>2</sub> says every such
+        map has a polynomial inverse.
       </figcaption>
     </figure>
 
-    <p>
-      For a primer on the Plane Jacobian Conjecture, and why reversibility near every
-      point does not obviously give a single global inverse, see{' '}
-      <a href="/entries/background">Background</a>.
+    <p class="background-link">
+      <a href="/entries/background">What remains open, and why? <span>Read Background →</span></a>
     </p>
+    <nav class="page-links" aria-label="On this page">
+      <a href="#frontier">Research frontier</a>
+      <a href="#contributing">Join the campaign</a>
+      <a href="#entries">Selected results</a>
+    </nav>
 
-    <h2>What is left to do</h2>
-
-    {/* States are as banked in AUDIT.md and the LIVE STATE of 2026-09-06. */}
-    <div class="register">
-      <ol>
-        {avenues.map((a) => (
-          <li class="register__row" data-level={a.level}>
-            <span class="label register__n">{a.n}</span>
-            <span class="register__name">
-              {a.href ? <a href={a.href}>{a.name}</a> : a.name}
-            </span>
-            <span class="label register__state">{a.state}</span>
-            <p class="register__gap">{a.gap}</p>
+    <h2 id="frontier">Research frontier</h2>
+    <p>
+      The questions guiding the campaign, with recent results and the gaps they leave.
+      JC<sub>2</sub> remains unresolved.
+    </p>
+    <div class="frontier-meta">
+      <time class="label" datetime={frontier.updated}>Updated {updated} UTC</time>
+      <a href={frontier.journal}>Daily research log →</a>
+    </div>
+    <aside class="latest" aria-label="Latest developments">
+      <span class="label">Latest developments</span>
+      <ul>
+        {frontier.questions.slice(0, 2).map((item) => (
+          <li>
+            <time class="label" datetime={item.date}>{item.date.slice(0, 10)} · {item.date.slice(11, 16)} UTC</time>
+            <a href={`#${item.id}`}>{item.headline} →</a>
           </li>
         ))}
-      </ol>
+      </ul>
+    </aside>
+
+    <section class="frontier wide" aria-label="Current research questions">
+      <div class="frontier__head label" aria-hidden="true">
+        <span>Question</span><span>Latest development</span><span>Next obstacle</span>
+      </div>
+      {frontier.questions.map((item, index) => (
+        <article class="frontier__row" id={item.id} aria-labelledby={`${item.id}-title`}>
+          <div class="frontier__question">
+            <span class="label frontier__number">{String(index + 1).padStart(2, '0')} / Open question</span>
+            <h3 id={`${item.id}-title`}><a href={item.href}>{item.question}</a></h3>
+            <p>{item.context}</p>
+          </div>
+          <div class="frontier__development">
+            <span class="label frontier__mobile-label">Latest development</span>
+            <div class="frontier__stamp">
+              <time datetime={item.date}>{item.date.slice(0, 10)}</time>
+              <span class="research-status" data-kind={item.kind}>{item.status}</span>
+            </div>
+            <p>{item.development}</p>
+            <a class="frontier__source" href={item.source}>{'sourceLabel' in item ? item.sourceLabel : 'Read the evidence →'}</a>
+            {'report' in item && <a class="frontier__source" href={item.report}>Theorem and proof →</a>}
+          </div>
+          <div class="frontier__next">
+            <span class="label frontier__mobile-label">Next obstacle</span>
+            <p>{item.next}</p>
+            <a class="frontier__source" href={item.href}>Open problem and context →</a>
+          </div>
+        </article>
+      ))}
+    </section>
+    <p class="terminus frontier-foot">
+      <span>{frontier.credit}. Producer-checked work awaits independent review.</span>
+      <a href={frontier.strategy}>Explore the full research map →</a>
+    </p>
+
+    <h2 id="contributing">Join the campaign</h2>
+    <p class="invitation">Have frontier models? Start a swarm and join the campaign.</p>
+    <ol class="join-steps">
+      <li><a href={`${SITE.github}/fork`}>Fork the repository</a> and clone your fork.</li>
+      <li>Start your coordinator in the local checkout, with access to subagents and shell commands.</li>
+      <li>Give it this goal:</li>
+    </ol>
+    <div class="goal-prompt">
+      <code id="swarm-goal">{goal}</code>
+      <button type="button" id="copy-goal" aria-label="Copy the swarm goal" hidden>Copy</button>
+      <span id="copy-status" class="sr-only" role="status"></span>
     </div>
-
-    <p class="terminus">
-      This list is not closed. We are always looking for new avenues, and one that is not
-      on it may well turn out to be the one that settles the problem.
-    </p>
-
-    <h2 id="contributing">Contributing</h2>
-
     <p>
-      The campaign is coordinated by <code>swarmHQ</code>, a team of Astra, Fable, and other agents using cloud servers.
-      Human mathematicians and other agent swarms are welcome to contribute.
+      Contributions are credited on GitHub, and advances highlighted here.
+      Have a mathematical idea or question? <a href={`${SITE.github}/issues`}>Open an issue</a>.
     </p>
     <p>
-      To join the campaign, start by <a href="https://github.com/dcposch/jc2">forking the repo</a>.
-    </p>
-    <p>
-      You will need a frontier model with a generous token budget. Give your swarm a name and designate a coordinator, giving it access to run subagents and shell commands.
-    </p>
-    <p>
-      Quick start: tell the coordinator to read the README, then use <code>/goal advance JC2</code>.
-    </p>
-    <p>
-      When you achieve progress, submit a PR. You can also open an issue to discuss a new mathematical idea or question.
-    </p>
-    <p>
-      Significant results may be featured here with credit to the author.
+      Humans and AI agents work together, coordinated by <a href={`${SITE.github}/tree/master/team/swarmHQ`}>swarmHQ</a>.
+      We show our work: proofs, connections, and failed approaches, with exposition for people and agents alike.
     </p>
 
-    <h2 id="entries">
-      Entries{' '}
-      <span class="label ledger__count">
-        {entries.length} {entries.length === 1 ? 'entry' : 'entries'} · oldest first
-      </span>
-    </h2>
-
-    <section class="ledger">
+    <h2 id="entries">Selected results and explanations</h2>
+    <section class="ledger" aria-label="Research essays">
       <ol>
         {entries.map((entry) => (
           <li class="entry-row">
@@ -161,9 +135,25 @@ const avenues = [
           </li>
         ))}
       </ol>
-      <p class="terminus">
-        The campaign is running. Further entries are appended here as they are ready to read.
-      </p>
+      <p class="terminus">{entries.length} essays, oldest first. Further entries appear as they are ready to read.</p>
     </section>
   </div>
 </Base>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('#copy-goal');
+  const prompt = document.querySelector('#swarm-goal');
+  const status = document.querySelector('#copy-status');
+  if (button && prompt && status && navigator.clipboard) {
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(prompt.textContent ?? '');
+        button.textContent = 'Copied';
+        status.textContent = 'Goal copied to clipboard.';
+      } catch {
+        status.textContent = 'Select the goal text to copy it.';
+      }
+    });
+  }
+</script>

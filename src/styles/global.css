@@ -491,57 +491,63 @@ h3 {
   text-wrap: balance;
 }
 
-/* Register: the campaign's status board. One row per avenue, its state, and
-   the remaining gap in fine print. Dense on purpose — this is the part of the
-   page a contributor scans looking for somewhere to work. */
-.register { margin-top: var(--space-3); }
-.register ol { list-style: none; margin: 0; padding: 0; }
-
-.register__row {
-  display: grid;
-  grid-template-columns: 1.75rem 1fr auto;
-  gap: 0 var(--space-3);
-  align-items: baseline;
-  padding-block: var(--space-2);
-  border-bottom: 1px solid var(--rule);
-}
-.register__row:first-child { border-top: 1px solid var(--ink); }
-/* Faint, not accent: the blue belongs to section numbers and links, and two
-   accented numbering systems this close together read as one confused list. */
-.register__n     { color: var(--ink-faint); }
-.register__name  { line-height: var(--leading-tight); text-wrap: balance; }
-.register__name a { display: inline-block; padding-block: var(--space-1); }
-.register__state { white-space: nowrap; color: var(--ink-muted); }
-
-/* Status lamp: solid for proved, accent for partial, hollow for open. */
-.register__state::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  margin-right: var(--space-2);
-  vertical-align: 0.08em;
-  background: var(--ink);
-}
-.register__row[data-level='partial'] .register__state::before { background: var(--accent); }
-.register__row[data-level='open'] .register__state::before {
-  background: none;
-  box-shadow: inset 0 0 0 1px var(--rule-strong);
-}
-
-.register__gap {
-  grid-column: 2 / -1;
-  margin: var(--space-1) 0 0;
-  font-size: var(--text-sm);
-  line-height: var(--leading-mid);
-  color: var(--ink-faint);
-  text-wrap: pretty;
-}
+/* Home: short orientation, then a dated research register. */
+.background-link { font-size: var(--text-md); line-height: var(--leading-mid); }
+.background-link span { color: var(--accent); white-space: nowrap; }
+/* The homepage comparison must show both panels on phones. SVG label sizes
+   are viewBox units, matching the figure convention in section 7. The long
+   panel subtitles repeat the caption and are omitted at this scale. */
 @media (max-width: 40rem) {
-  .register__row { grid-template-columns: 1.75rem 1fr; }
-  .register__state, .register__gap { grid-column: 2; }
-  .register__state { margin-top: var(--space-1); }
+  .statement { padding-inline: var(--space-2); }
+  .statement__plate svg { min-width: 0; }
+  .statement__plate svg text:not([class]) { display: none; }
+  .statement__plate svg .ttl, .statement__plate svg .math { font-size: 20px; }
 }
+.page-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
+.frontier-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
+.latest { padding: var(--space-3); border-left: 1px solid var(--accent); background: var(--paper-raised); }
+.latest ul { list-style: none; margin: var(--space-2) 0 0; padding: 0; }
+.latest li { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); align-items: baseline; font-size: var(--text-sm); }
+.latest .label { letter-spacing: var(--track-snug); }
+
+.frontier__head, .frontier__row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.frontier__head { padding: var(--space-2) var(--space-3); border-block: 1px solid var(--ink); }
+.frontier__row { padding: var(--space-4) var(--space-3); border-bottom: 1px solid var(--rule-strong); scroll-margin-top: var(--space-4); }
+.frontier__row > div { min-width: 0; }
+.frontier__row h3 { margin-top: var(--space-2); }
+.frontier__row p { margin: var(--space-2) 0; font-size: var(--text-sm); line-height: var(--leading-mid); text-wrap: pretty; }
+.frontier__question p { color: var(--ink-muted); }
+.frontier__number { letter-spacing: var(--track-snug); }
+.frontier__stamp { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-2); font-family: var(--font-mono); font-size: var(--text-xs); line-height: var(--leading-mid); color: var(--ink-muted); }
+.research-status { display: inline-flex; align-items: center; gap: var(--space-2); }
+.research-status::before { content: ''; width: var(--space-2); height: var(--space-2); flex: none; border: 1px solid var(--accent); }
+.research-status[data-kind='proved']::before { background: var(--accent); }
+.frontier__source { display: block; width: fit-content; margin-top: var(--space-2); font-size: var(--text-sm); }
+.frontier__mobile-label { display: none; }
+.frontier-foot { display: grid; gap: var(--space-2); }
+
+/* Before the wide margins open, each question becomes a labelled vertical
+   record. Keeping the three columns on a phone would hide the mathematics. */
+@media (max-width: 59.999rem) {
+  .frontier__head { display: none; }
+  .frontier__row { grid-template-columns: 1fr; gap: var(--space-3); padding-inline: 0; }
+  .frontier__row:first-of-type { border-top: 1px solid var(--ink); }
+  .frontier__mobile-label { display: block; margin-bottom: var(--space-2); }
+  .frontier__row h3 { max-width: var(--measure); }
+}
+
+.invitation { font-size: var(--text-md); line-height: var(--leading-mid); }
+.prose .join-steps { margin-block: 0; }
+.join-steps li + li { margin-top: var(--space-2); }
+.goal-prompt { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3); background: var(--paper-sunk); border: 1px solid var(--rule-strong); }
+.goal-prompt code { flex: 1; min-width: 0; padding: 0; font-size: var(--text-sm); line-height: var(--leading-prose); overflow-wrap: anywhere; }
+.goal-prompt button { flex: none; padding: var(--space-2); border: 1px solid var(--rule-strong); background: var(--paper-raised); color: var(--ink); font: inherit; font-size: var(--text-sm); cursor: pointer; }
+.goal-prompt button:hover { border-color: var(--accent); color: var(--accent); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* Ledger ---------------------------------------------------------------- */
 /* The entry list is the page's spine, so its heading is an ordinary numbered

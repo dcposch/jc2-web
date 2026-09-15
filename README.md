@@ -23,6 +23,7 @@ npm run build    # -> dist/
 
 ```
 src/content/entries/*.md   the entries — plain Markdown, one file per entry
+src/data/frontier.ts       dated homepage research summary, linked to campaign evidence
 src/figures/*.svg          generated figures (committed; see below)
 src/pages/                 home, entry template, RSS
 src/layouts/Base.astro     the shared page frame
@@ -94,6 +95,32 @@ Add `src/content/entries/<slug>.md` with `title`, `date`, and a one-sentence
 on the index and the date in the feed. Set `draft: true` to keep an entry off
 the index and the feed while it is being written. Nothing else needs editing —
 the index, the feed and the previous/next links all follow.
+
+### Updating the research frontier
+
+`src/data/frontier.ts` holds the homepage's editorial summary. Update it when a
+substantive result, correction, or failed approach changes the story, ideally daily
+while the campaign is active. It is a dated snapshot, not a live worker dashboard.
+Automatic refresh and coordinator integration are not installed by this change.
+
+Read the latest campaign `PROGRESS.md`, the current `APPROACHES.md` sections,
+the relevant evidence and reviews, and the newest `LIVE STATE` before editing.
+
+- Set `basis` to the campaign commit you read and `updated` to the snapshot time
+  in UTC. Keep questions ordered by their latest development, newest first.
+- Show a few precise questions, each with context, a dated development, its
+  review status, and the remaining obstacle. Preserve the hypotheses and scope.
+- Pin evidence links to `basis`; link questions to the current strategy on
+  `master`. Include the promotion/review record if the original report predates
+  review. Never upgrade a producer check to a reviewed theorem.
+- Closed tests and parked work can explain a live question, but must be labelled
+  as such. Do not present every unresolved avenue as an active agent assignment.
+- Give credit, retain links to the full strategy and daily log, and run
+  `npm run build`. Commit the summary with the site; Git history preserves prior
+  snapshots. No campaign ledger is duplicated or modified here.
+
+The first two questions also populate the latest-developments strip. Keep their
+timestamps complete (`YYYY-MM-DDTHH:mm:ssZ`). Dates on older rows may be date-only.
 
 ## License
 

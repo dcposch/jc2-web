@@ -55,14 +55,15 @@ const canonical = new URL(canonicalPath(Astro.url.pathname), Astro.site);
         <div class="colophon__inner">
           <nav aria-label="Site">
             <a class="label" href={SITE.x} rel="me">x.com/dcposch</a>
-            <a class="label" href={SITE.github}>github</a>
+            <a class="label" href={SITE.github}>Campaign repository</a>
+            <a class="label" href={SITE.source}>Website source</a>
           </nav>
         </div>
       </footer>
     </div>
 
     <script is:inline>
-      // The only script on the site. A box that scrolls horizontally must be
+      // A box that scrolls horizontally must be
       // reachable by keyboard, or its content is unreachable without a mouse.
       // Long equations and wide figures are the two that can overflow.
       (function () {
