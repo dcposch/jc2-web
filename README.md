@@ -1,6 +1,6 @@
 **https://jc2.fun**
 
-A public campaign to settle JC₂, the last remaining part of the Jacobian Conjecture.
+A public campaign to resolve JC₂, the last remaining part of the Jacobian Conjecture.
 
 Our mission is to accelerate mathematics, not just race to an outcome. We show our work, including new proofs, mechanisms, connections, and negative results. We value exposition and inspiration for man and machine alike.
 

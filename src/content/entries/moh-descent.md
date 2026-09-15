@@ -1,7 +1,7 @@
 ---
 title: "Descending to a problem the campaign already knows how to solve"
 date: 2026-09-05
-description: "Moh's Appendix II sends a pair of degrees (n, m) to a smaller pair with a monomial Jacobian. The descended problems land where the campaign already holds certificates, an unbounded ray of them is now a theorem through its eighth member, and a printed step in Moh's own proof turned out to be wrong."
+description: "Moh's Appendix II sends a pair of degrees (n, m) to a smaller pair with a monomial Jacobian. The descended problems land where the campaign already holds certificates. An unbounded ray of them is now a theorem through its eighth member. A printed step in Moh's own proof turned out to be wrong."
 sources:
   - label: "Lane report"
     href: "https://github.com/dcposch/jc2/blob/master/xmodel/m2-descent-opus5-20260903.md"

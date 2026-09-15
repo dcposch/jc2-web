@@ -1,5 +1,5 @@
 ---
-title: "Background: reversible maps and JC2"
+title: "Background: reversible maps and JC₂"
 date: 2026-08-18
 description: "What was known before the campaign: why reversibility near every point does not obviously give a single global inverse, and how the difficulty concentrates at infinity."
 sources:

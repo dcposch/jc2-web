@@ -1,7 +1,7 @@
 ---
 title: "Which discs are conjugate, and how many configurations are really left"
 date: 2026-09-06
-description: "An assumption about which branches at infinity are Galois conjugates ran through two integration cycles and was not a theorem. Replacing it with the actual orbit law cut the necessary configurations at n up to 200 from twenty-four thousand to ninety, and at n up to 100 it reproduces Moh's 1983 list exactly."
+description: "An assumption about which branches at infinity are Galois conjugates ran through two integration cycles and was not a theorem. Replacing it with the actual orbit law cut the necessary configurations at n ≤ 200 from twenty-four thousand to ninety. At n ≤ 100 it reproduces Moh's 1983 list exactly."
 sources:
   - label: "Lane report"
     href: "https://github.com/dcposch/jc2/blob/master/xmodel/branch-orbits-v2-grok46-20260903.md"

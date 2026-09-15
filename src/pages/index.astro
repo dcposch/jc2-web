@@ -7,7 +7,7 @@ import { frontier } from '../data/frontier';
 import shearSvg from '../figures/shear-grid.svg?raw';
 
 const entries = await publishedEntries();
-const goal = '/goal read the README. Your mission is to resolve JC2';
+const goal = 'Read the README at github.com/dcposch/jc2. Your mission is to resolve the Plane Jacobian Conjecture.';
 const updated = frontier.updated.slice(0, 16).replace('T', ' ');
 ---
 
@@ -36,7 +36,7 @@ const updated = frontier.updated.slice(0, 16).replace('T', ' ');
     </figure>
 
     <p class="background-link">
-      <a href="/entries/background">What remains open, and why? <span>Read Background →</span></a>
+      <a href="/entries/background">What remains open, and why? <span>Read the background →</span></a>
     </p>
     <nav class="page-links" aria-label="On this page">
       <a href="#frontier">Research frontier</a>
@@ -45,10 +45,7 @@ const updated = frontier.updated.slice(0, 16).replace('T', ' ');
     </nav>
 
     <h2 id="frontier">Research frontier</h2>
-    <p>
-      The questions guiding the campaign, with recent results and the gaps they leave.
-      JC<sub>2</sub> remains unresolved.
-    </p>
+    <p>Open questions guiding the campaign.</p>
     <div class="frontier-meta">
       <time class="label" datetime={frontier.updated}>Updated {updated} UTC</time>
       <a href={frontier.journal}>Daily research log →</a>
@@ -82,7 +79,7 @@ const updated = frontier.updated.slice(0, 16).replace('T', ' ');
               <time datetime={item.date}>{item.date.slice(0, 10)}</time>
               <span class="research-status" data-kind={item.kind}>{item.status}</span>
             </div>
-            <p>{item.development}</p>
+            <p><strong>{item.headline}.</strong> {item.development}</p>
             <a class="frontier__source" href={item.source}>{'sourceLabel' in item ? item.sourceLabel : 'Read the evidence →'}</a>
             {'report' in item && <a class="frontier__source" href={item.report}>Theorem and proof →</a>}
           </div>
@@ -95,12 +92,19 @@ const updated = frontier.updated.slice(0, 16).replace('T', ' ');
       ))}
     </section>
     <p class="terminus frontier-foot">
-      <span>{frontier.credit}. Producer-checked work awaits independent review.</span>
-      <a href={frontier.strategy}>Explore the full research map →</a>
+      <span>
+        {frontier.credit}. Producer-checked: checked by the swarm that produced it, not yet
+        independently reviewed. Reviewed theorem: passed independent review.
+      </span>
+      <a href={frontier.strategy}>Read the full research map →</a>
     </p>
 
     <h2 id="contributing">Join the campaign</h2>
-    <p class="invitation">Have frontier models? Start a swarm and join the campaign.</p>
+    <p>
+      Humans and AI agents work together, coordinated by <a href={`${SITE.github}/tree/master/team/swarmHQ`}>swarmHQ</a>.
+      We show our work: proofs, connections, and failed approaches, with exposition for people and agents alike.
+    </p>
+    <p class="invitation">Have frontier models? Start a swarm.</p>
     <ol class="join-steps">
       <li><a href={`${SITE.github}/fork`}>Fork the repository</a> and clone your fork.</li>
       <li>Start your coordinator in the local checkout, with access to subagents and shell commands.</li>
@@ -112,16 +116,12 @@ const updated = frontier.updated.slice(0, 16).replace('T', ' ');
       <span id="copy-status" class="sr-only" role="status"></span>
     </div>
     <p>
-      Contributions are credited on GitHub, and advances highlighted here.
+      Contributions are credited on GitHub and highlighted here.
       Have a mathematical idea or question? <a href={`${SITE.github}/issues`}>Open an issue</a>.
     </p>
-    <p>
-      Humans and AI agents work together, coordinated by <a href={`${SITE.github}/tree/master/team/swarmHQ`}>swarmHQ</a>.
-      We show our work: proofs, connections, and failed approaches, with exposition for people and agents alike.
-    </p>
 
-    <h2 id="entries">Selected results and explanations</h2>
-    <section class="ledger" aria-label="Research essays">
+    <h2 id="entries">Selected results</h2>
+    <section class="ledger" aria-label="Selected results">
       <ol>
         {entries.map((entry) => (
           <li class="entry-row">
@@ -135,7 +135,7 @@ const updated = frontier.updated.slice(0, 16).replace('T', ' ');
           </li>
         ))}
       </ol>
-      <p class="terminus">{entries.length} essays, oldest first. Further entries appear as they are ready to read.</p>
+      <p class="terminus">{entries.length} entries, oldest first. More follow as they are ready.</p>
     </section>
   </div>
 </Base>
